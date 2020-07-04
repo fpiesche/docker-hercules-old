@@ -3,3 +3,10 @@ Hercules
 
 # Packaged distributions
 hercules-*.tar.gz
+distrib
+!distrib/conf/import/battle.conf
+!distrib/conf/import/char-server.conf
+!distrib/conf/import/login-server.conf
+!distrib/conf/import/map-server.conf
+!distrib/sql-files/classic/9-interserver-user.sh
+!distrib/sql-files/renewal/9-interserver-user.sh
