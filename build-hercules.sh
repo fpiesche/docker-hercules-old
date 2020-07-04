@@ -57,5 +57,5 @@ cp /build/Hercules/sql-files/mob_db2.sql /build/hercules/sql-files/renewal/6-mob
 cp /build/Hercules/sql-files/logs.sql /build/hercules/sql-files/renewal/8-logs.sql 
 
 echo "Package up the distribution..."
-cd /build
-tar -zcvf /build/hercules`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz /build/hercules
+chmod -R a+rwx /build
+tar -zcvf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz /build/hercules
