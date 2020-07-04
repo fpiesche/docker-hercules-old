@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+    build:
+        image: ubuntu:18.04
+        volumes:
+            - .:/build
+        environment:
+            HERCULES_BUILD_OPTS: --disable-renewal --enable-packetver=20180418
+        command: /build/build-hercules.sh
