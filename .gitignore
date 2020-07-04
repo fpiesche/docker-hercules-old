@@ -3,6 +3,7 @@ Hercules
 
 # Build results
 hercules-*.tar.gz
+hercules/*
 !hercules/conf/import/battle.conf
 !hercules/conf/import/char-server.conf
 !hercules/conf/import/login-server.conf
@@ -12,4 +13,3 @@ hercules-*.tar.gz
 !hercules/.env
 !hercules/docker-compose.yml
 !hercules/Dockerfile
-hercules
