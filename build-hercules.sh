@@ -10,6 +10,8 @@ echo "Cloning Hercules repo..."
 cd /build
 rm -rf Hercules
 git clone https://github.com/HerculesWS/Hercules/
+chmod a+rwx Hercules
+git reset --hard HEAD^
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd /build/Hercules
@@ -23,7 +25,7 @@ mkdir -p /build/hercules/sql-files/renewal
 
 echo "Move server data into the distribution..."
 cp /build/Hercules/athena-start /build/hercules/
-cp /build/Hercules/conf /build/hercules/
+cp -n /build/Hercules/conf /build/hercules/
 cp /build/Hercules/cache /build/hercules/
 cp /build/Hercules/db /build/hercules/
 cp /build/Hercules/log /build/hercules/
