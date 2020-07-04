@@ -10,7 +10,7 @@ echo "Assuring clean distribution..."
 rm -rf /build/hercules
 
 echo "Cloning Hercules repo..."
-git clone https://github.com/HerculesWS/Hercules/ /build/src
+git clone -b stable https://github.com/HerculesWS/Hercules/ /build/src
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd /build/src
