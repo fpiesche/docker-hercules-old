@@ -30,7 +30,8 @@ services:
             # map server
             - 5121:5121
         volumes:
-            - ./distrib/conf:/hercules/conf
+            - configuration:/hercules/conf/import
 
 volumes:
     mysql_data:
+    configuration:
