@@ -4,12 +4,3 @@ Hercules
 # Build results
 hercules-*.tar.gz
 hercules/*
-!hercules/conf/import/battle.conf
-!hercules/conf/import/char-server.conf
-!hercules/conf/import/login-server.conf
-!hercules/conf/import/map-server.conf
-!hercules/sql-files/classic/9-interserver-user.sh
-!hercules/sql-files/renewal/9-interserver-user.sh
-!hercules/.env
-!hercules/docker-compose.yml
-!hercules/Dockerfile

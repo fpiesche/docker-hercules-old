@@ -15,8 +15,13 @@ git reset --hard HEAD^
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd /build/Hercules
+make clean
 ./configure ${HERCULES_BUILD_OPTS}
 make
+
+echo "Assuring clean distribution..."
+rm -rf /build/hercules
+cp -r /build/hercules-tmpl /build/hercules
 
 echo "Adding destination paths for distribution..."
 mkdir -p /build/hercules
@@ -25,20 +30,19 @@ mkdir -p /build/hercules/sql-files/renewal
 
 echo "Move server data into the distribution..."
 cp /build/Hercules/athena-start /build/hercules/
-cp -n /build/Hercules/conf /build/hercules/
-cp /build/Hercules/cache /build/hercules/
-cp /build/Hercules/db /build/hercules/
-cp /build/Hercules/log /build/hercules/
-cp /build/Hercules/maps /build/hercules/
-cp /build/Hercules/npc /build/hercules/
-cp /build/Hercules/plugins /build/hercules/
-cp /build/Hercules/save /build/hercules/
-cp /build/Hercules/char-server /build/hercules/
-cp /build/Hercules/login-server /build/hercules/
-cp /build/Hercules/map-server /build/hercules/
+cp -nr /build/Hercules/conf /build/hercules/
+cp -r /build/Hercules/cache /build/hercules/
+cp -r /build/Hercules/db /build/hercules/
+cp -r /build/Hercules/log /build/hercules/
+cp -r /build/Hercules/maps /build/hercules/
+cp -r /build/Hercules/npc /build/hercules/
+cp -r /build/Hercules/plugins /build/hercules/
+cp -r /build/Hercules/save /build/hercules/
+cp -r /build/Hercules/char-server /build/hercules/
+cp -r /build/Hercules/login-server /build/hercules/
+cp -r /build/Hercules/map-server /build/hercules/
 
 echo "Remove unnecessary configuration templates from distribution..."
-cp -n /build/hercules/conf/import-tmpl /build/hercules/conf/import
 rm -rf /build/hercules/conf/import-tmpl
 
 echo "Prepare Classic SQL files for distribution..."
@@ -61,4 +65,4 @@ cp /build/Hercules/sql-files/logs.sql /build/hercules/sql-files/renewal/8-logs.s
 
 echo "Package up the distribution..."
 chmod -R a+rwx /build
-tar -zcvf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz /build/hercules
+tar -zcf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz /build/hercules
