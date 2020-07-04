@@ -6,6 +6,9 @@ apt-get install -y gcc git make
 echo "Installing dependencies..."
 apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
+echo "Assuring clean distribution..."
+rm -rf /build/hercules
+
 echo "Cloning Hercules repo..."
 git clone https://github.com/HerculesWS/Hercules/ /build/src
 
@@ -15,14 +18,8 @@ make clean
 ./configure ${HERCULES_BUILD_OPTS}
 make
 
-echo "Assuring clean distribution..."
-rm -rf /build/hercules
-cp -r /build/hercules-tmpl /build/hercules
-
 echo "Copy server data into distribution..."
-mkdir -p /build/hercules
-cp /build/src/athena-start /build/hercules/
-cp -nr /build/src/conf /build/hercules/
+cp -r /build/src/conf /build/hercules/
 cp -r /build/src/cache /build/hercules/
 cp -r /build/src/db /build/hercules/
 cp -r /build/src/log /build/hercules/
@@ -30,9 +27,10 @@ cp -r /build/src/maps /build/hercules/
 cp -r /build/src/npc /build/hercules/
 cp -r /build/src/plugins /build/hercules/
 cp -r /build/src/save /build/hercules/
-cp -r /build/src/char-server /build/hercules/
-cp -r /build/src/login-server /build/hercules/
-cp -r /build/src/map-server /build/hercules/
+cp /build/src/athena-start /build/hercules/
+cp /build/src/char-server /build/hercules/
+cp /build/src/login-server /build/hercules/
+cp /build/src/map-server /build/hercules/
 
 echo "Remove unnecessary configuration templates from distribution..."
 rm -rf /build/hercules/conf/import-tmpl
@@ -58,6 +56,8 @@ cp /build/src/sql-files/mob_db2.sql /build/hercules/sql-files/renewal/6-mob_db2.
 cp /build/src/sql-files/logs.sql /build/hercules/sql-files/renewal/8-logs.sql 
 
 echo "Package up the distribution..."
+cp -r /build/hercules-tmpl/* /build/hercules/
 chmod -R a+rwx /build
 rm -rf /build/src
-tar -zcf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz /build/hercules
+cd /build/hercules
+tar -zcvf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz .
