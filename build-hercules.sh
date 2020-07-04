@@ -8,6 +8,7 @@ apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
 echo "Cloning Hercules repo..."
 cd /build
+rm -rf Hercules
 git clone https://github.com/HerculesWS/Hercules/
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
@@ -21,21 +22,21 @@ mkdir -p /build/hercules/sql-files/classic
 mkdir -p /build/hercules/sql-files/renewal
 
 echo "Move server data into the distribution..."
-mv /build/Hercules/athena-start /build/hercules/
-mv /build/Hercules/conf /build/hercules/
-mv /build/Hercules/cache /build/hercules/
-mv /build/Hercules/db /build/hercules/
-mv /build/Hercules/log /build/hercules/
-mv /build/Hercules/maps /build/hercules/
-mv /build/Hercules/npc /build/hercules/
-mv /build/Hercules/plugins /build/hercules/
-mv /build/Hercules/save /build/hercules/
-mv /build/Hercules/char-server /build/hercules/
-mv /build/Hercules/login-server /build/hercules/
-mv /build/Hercules/map-server /build/hercules/
+cp /build/Hercules/athena-start /build/hercules/
+cp /build/Hercules/conf /build/hercules/
+cp /build/Hercules/cache /build/hercules/
+cp /build/Hercules/db /build/hercules/
+cp /build/Hercules/log /build/hercules/
+cp /build/Hercules/maps /build/hercules/
+cp /build/Hercules/npc /build/hercules/
+cp /build/Hercules/plugins /build/hercules/
+cp /build/Hercules/save /build/hercules/
+cp /build/Hercules/char-server /build/hercules/
+cp /build/Hercules/login-server /build/hercules/
+cp /build/Hercules/map-server /build/hercules/
 
 echo "Remove unnecessary configuration templates from distribution..."
-mv -n /build/hercules/conf/import-tmpl /build/hercules/conf/import
+cp -n /build/hercules/conf/import-tmpl /build/hercules/conf/import
 rm -rf /build/hercules/conf/import-tmpl
 
 echo "Prepare Classic SQL files for distribution..."
