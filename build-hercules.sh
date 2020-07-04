@@ -9,6 +9,8 @@ apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 echo "Cloning Hercules repo..."
 cd /build
 git clone https://github.com/HerculesWS/Hercules/
+chmod a+rwx Hercules
+git reset --hard HEAD^
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd /build/Hercules
@@ -22,7 +24,7 @@ mkdir -p /build/hercules/sql-files/renewal
 
 echo "Move server data into the distribution..."
 mv /build/Hercules/athena-start /build/hercules/
-mv /build/Hercules/conf /build/hercules/
+mv -n /build/Hercules/conf /build/hercules/
 mv /build/Hercules/cache /build/hercules/
 mv /build/Hercules/db /build/hercules/
 mv /build/Hercules/log /build/hercules/
