@@ -19,14 +19,15 @@ make clean
 make
 
 echo "Copy server data into distribution..."
-cp -r /build/src/conf /build/hercules/
-cp -r /build/src/cache /build/hercules/
-cp -r /build/src/db /build/hercules/
-cp -r /build/src/log /build/hercules/
-cp -r /build/src/maps /build/hercules/
-cp -r /build/src/npc /build/hercules/
-cp -r /build/src/plugins /build/hercules/
-cp -r /build/src/save /build/hercules/
+declare -a serverdata=("cache" "conf" "db" "log" "maps" "npc" "plugins" "save")
+for path in "${serverdata[@]}"
+do
+   echo "Copying $path"
+   mkdir -p /build/hercules/$path
+   cp -r /build/src/$path/* /build/hercules/$path/
+done
+
+echo "Copying executables into distribution..."
 cp /build/src/athena-start /build/hercules/
 cp /build/src/char-server /build/hercules/
 cp /build/src/login-server /build/hercules/
@@ -57,6 +58,7 @@ cp /build/src/sql-files/logs.sql /build/hercules/sql-files/renewal/8-logs.sql
 
 echo "Package up the distribution..."
 cp -r /build/hercules-tmpl/* /build/hercules/
+cp /build/hercules-tmpl/.env /build/hercules
 chmod -R a+rwx /build
 rm -rf /build/src
 cd /build/hercules
