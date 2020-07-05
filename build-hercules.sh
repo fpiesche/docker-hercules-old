@@ -80,6 +80,5 @@ echo "Package up the distribution..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp ${BUILD_TARGET}-tmpl/.env ${BUILD_TARGET}
 chmod -R a+rwx /build
-rm -rf ${REPO_CHECKOUT}
 cd /build
 tar -zcf /build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
