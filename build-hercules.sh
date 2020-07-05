@@ -33,12 +33,17 @@ echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd ${REPO_CHECKOUT}
 make clean
 ./configure ${HERCULES_BUILD_OPTS}
+if [[ $? -ne 0 ]]; then
+   echo "CONFIGURE FAILED"
+   exit 1
+fi
 make
 if [[ $? -ne 0 ]]; then
    echo "BUILD FAILED"
    exit 1
 fi
 
+# Copy server data to distribution directory
 declare -a serverdata=("cache" "conf" "db" "log" "maps" "npc" "plugins" "save")
 for path in "${serverdata[@]}"
 do
@@ -87,3 +92,4 @@ cp /build/distrib-tmpl/.env ${BUILD_TARGET}
 chmod -R a+rwx ${BUILD_TARGET}
 cd /build
 tar -zcf /build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
+echo "Done!"
