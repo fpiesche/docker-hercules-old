@@ -19,9 +19,9 @@ for mode in "${servermodes[@]}"; do
             ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
             if [[ $? -eq 0 ]]; then
                 cd hercules_${mode}_packetver-${packetver:-default}_${arch}
-                docker build . --tag=hercules:${DOCKER_TAG}-${arch}
-                docker push florianpiesche/hercules:${DOCKER_TAG}-${arch}
-                docker manifest create --amend florianpiesche/hercules:${DOCKER_TAG}-latest florianpiesche/hercules:${DOCKER_TAG}-${arch}
+                docker build . --tag=${DOCKER_TAG}-${arch}
+                docker push florianpiesche/${DOCKER_TAG}-${arch}
+                docker manifest create --amend florianpiesche/${DOCKER_TAG}-latest florianpiesche/${DOCKER_TAG}-${arch}
                 cd ..
             else
                 echo "BUILD FAILED"
