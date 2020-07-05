@@ -1,7 +1,6 @@
 # Hercules git repository
 Hercules
+src
 
 # Build results
-hercules-*.tar.gz
-hercules/*
-src/*
+hercules*

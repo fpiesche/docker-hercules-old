@@ -73,7 +73,7 @@ cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/renewal/6-mo
 cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/renewal/8-logs.sql 
 
 echo "Package up the distribution..."
-cp -r ${BUILD_TARGET}-tmpl/* ${BUILD_TARGET}/
+cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp ${BUILD_TARGET}-tmpl/.env ${BUILD_TARGET}
 chmod -R a+rwx /build
 rm -rf ${REPO_CHECKOUT}
