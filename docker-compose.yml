@@ -1,71 +1,15 @@
 version: '3.2'
 
 services:
-    # build:
-    #     image: ubuntu:18.04
-    #     volumes:
-    #         - .:/build
-    #     environment:
-    #         # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
-    #         HERCULES_SERVER_MODE: ${HERCULES_SERVER_MODE}
-    #         # Set this to the date string to build a specific packet version (default: 20180418).
-    #         HERCULES_PACKET_VERSION: ${HERCULES_PACKET_VERSION}
-    #         # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
-    #         HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
-
-    #     command: /build/build-hercules.sh
-
-    build-classic-20180418:
-        image: ubuntu:18.04
+    build:
+        image: ${ARCH}ubuntu:18.04
         volumes:
             - .:/build
         environment:
             # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
-            HERCULES_SERVER_MODE: classic
+            HERCULES_SERVER_MODE: ${HERCULES_SERVER_MODE}
             # Set this to the date string to build a specific packet version (default: 20180418).
-            HERCULES_PACKET_VERSION: 20180418
-            # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
-            HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
-
-        command: /build/build-hercules.sh
-
-    build-renewal-20180418:
-        image: ubuntu:18.04
-        volumes:
-            - .:/build
-        environment:
-            # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
-            HERCULES_SERVER_MODE: renewal
-            # Set this to the date string to build a specific packet version (default: 20180418).
-            HERCULES_PACKET_VERSION: 20180418
-            # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
-            HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
-
-        command: /build/build-hercules.sh
-
-    build-classic-default:
-        image: ubuntu:18.04
-        volumes:
-            - .:/build
-        environment:
-            # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
-            HERCULES_SERVER_MODE: classic
-            # Set this to the date string to build a specific packet version (default: 20180418).
-            HERCULES_PACKET_VERSION: ''
-            # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
-            HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
-
-        command: /build/build-hercules.sh
-
-    build-renewal-default:
-        image: ubuntu:18.04
-        volumes:
-            - .:/build
-        environment:
-            # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
-            HERCULES_SERVER_MODE: renewal
-            # Set this to the date string to build a specific packet version (default: 20180418).
-            HERCULES_PACKET_VERSION: ''
+            HERCULES_PACKET_VERSION: ${HERCULES_PACKET_VERSION}
             # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
             HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
 
