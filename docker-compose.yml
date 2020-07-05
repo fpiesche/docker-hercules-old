@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
     build:
+        user: $UID
         image: ${ARCH}/ubuntu:18.04
         volumes:
             - .:/build
