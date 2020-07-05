@@ -1,8 +1,9 @@
 #!/bin/bash
 
-BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-default}_${ARCH}
-BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 REPO_CHECKOUT=/build/hercules-src
+PACKETVER_FROM_SOURCE=`cat ${REPO_CHECKOUT}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
+BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-$PACKETVER_FROM_SOURCE}_${ARCH}
+BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 
 echo "Building Hercules in ${HERCULES_SERVER_MODE} mode on ${ARCH}."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
