@@ -1,10 +1,11 @@
 #!/bin/bash
 
 ARCH=`uname -m`
-BUILD_TARGET=${BUILD_TARGET:-/build/hercules-${ARCH}}
+BUILD_TARGET=/build/hercules-${ARCH}
 REPO_CHECKOUT=/build/src
-HERCULES_REPO=${HERCULES_REPO:-https://github.com/HerculesWS/Hercules/}
-HERCULES_BRANCH=${HERCULES_BRANCH:-stable}
+
+echo "Building Hercules in ${HERCULES_SERVER_MODE} mode from ${HERCULES_REPO} ${HERCULES_BRANCH} on ${ARCH}."
+echo "Distribution will be assembled in ${BUILD_TARGET}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
@@ -13,8 +14,12 @@ if [[ ${ARCH} == "aarch64" ]]; then
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
 
-echo "Building Hercules from ${HERCULES_REPO} ${HERCULES_BRANCH} on ${ARCH}."
-echo "Distribution will be assembled in ${BUILD_TARGET}."
+# Set the packet version if it's been passed in.
+if [[ ! -z "${HERCULES_PACKET_VERSION}" ]]; then
+   echo "Specifying packet version ${HERCULES_PACKET_VERSION}."
+   HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --packetver=${HERCULES_PACKET_VERSION}"
+fi
+
 echo "Build options: ${HERCULES_BUILD_OPTS}"
 
 echo "Updating package database..."
@@ -53,25 +58,30 @@ cp ${REPO_CHECKOUT}/map-server ${BUILD_TARGET}/
 echo "Remove unnecessary configuration templates from distribution..."
 rm -rf ${BUILD_TARGET}/conf/import-tmpl
 
-echo "Copy Classic SQL files into distribution..."
-mkdir -p ${BUILD_TARGET}/sql-files/classic
-cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/classic/1-main.sql 
-cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/classic/2-item_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/classic/3-mob_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/classic/4-mob_skill_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/classic/5-item_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/classic/6-mob_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/classic/8-logs.sql 
-
-echo "Copy Renewal SQL files into distribution..."
-mkdir -p ${BUILD_TARGET}/sql-files/renewal
-cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/renewal/1-main.sql 
-cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/renewal/2-item_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/renewal/3-mob_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/renewal/4-mob_skill_db.sql 
-cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/renewal/5-item_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/renewal/6-mob_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/renewal/8-logs.sql 
+if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
+   echo "Copy Classic SQL files into distribution..."
+   mkdir -p ${BUILD_TARGET}/sql-files/classic
+   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/classic/1-main.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/classic/2-item_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/classic/3-mob_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/classic/4-mob_skill_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/classic/5-item_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/classic/6-mob_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/classic/8-logs.sql 
+elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
+   echo "Copy Renewal SQL files into distribution..."
+   mkdir -p ${BUILD_TARGET}/sql-files/renewal
+   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/renewal/1-main.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/renewal/2-item_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/renewal/3-mob_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/renewal/4-mob_skill_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/renewal/5-item_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/renewal/6-mob_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/renewal/8-logs.sql 
+else
+   echo "ERROR: Unknown server mode ${HERCULES_SERVER_MODE}!"
+   exit 1
+fi
 
 echo "Package up the distribution..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
