@@ -9,6 +9,7 @@ HERCULES_BRANCH=${HERCULES_BRANCH:-stable}
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
 if [[ ${ARCH} == "aarch64" ]]; then
+   echo "Running on arm64 - adding --disable-manager to build options to stop crashes."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
 
