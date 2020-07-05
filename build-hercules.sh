@@ -61,5 +61,5 @@ cp -r /build/hercules-tmpl/* /build/hercules/
 cp /build/hercules-tmpl/.env /build/hercules
 chmod -R a+rwx /build
 rm -rf /build/src
-cd /build/hercules
-tar -zcvf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz .
+cd /build
+tar -zcvf /build/hercules-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz hercules
