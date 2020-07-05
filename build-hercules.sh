@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ARCH=`uname -m`
 BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-default}_${ARCH}
 BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 REPO_CHECKOUT=/build/hercules-src
@@ -10,7 +9,7 @@ echo "Distribution will be assembled in ${BUILD_TARGET}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
-if [[ ${ARCH} == "aarch64" ]]; then
+if [[ ${ARCH} == "arm64v8" ]]; then
    echo "Running on arm64 - adding --disable-manager to build options to stop crashes."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
