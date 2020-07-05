@@ -31,8 +31,13 @@ apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd ${REPO_CHECKOUT}
+make clean
 ./configure ${HERCULES_BUILD_OPTS}
 make
+if [[ $? -ne 0 ]]; then
+   echo "BUILD FAILED"
+   exit 1
+fi
 
 declare -a serverdata=("cache" "conf" "db" "log" "maps" "npc" "plugins" "save")
 for path in "${serverdata[@]}"
