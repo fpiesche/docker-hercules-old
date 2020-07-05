@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ARCH=`uname -m`
-BUILD_TARGET=/build/hercules-${ARCH}
+BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-default}_${ARCH}
+BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 REPO_CHECKOUT=/build/src
 
 echo "Building Hercules in ${HERCULES_SERVER_MODE} mode from ${HERCULES_REPO} ${HERCULES_BRANCH} on ${ARCH}."
@@ -17,7 +18,7 @@ fi
 # Set the packet version if it's been passed in.
 if [[ ! -z "${HERCULES_PACKET_VERSION}" ]]; then
    echo "Specifying packet version ${HERCULES_PACKET_VERSION}."
-   HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --packetver=${HERCULES_PACKET_VERSION}"
+   HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --enable-packetver=${HERCULES_PACKET_VERSION}"
 fi
 
 echo "Build options: ${HERCULES_BUILD_OPTS}"
@@ -89,4 +90,4 @@ cp ${BUILD_TARGET}-tmpl/.env ${BUILD_TARGET}
 chmod -R a+rwx /build
 rm -rf ${REPO_CHECKOUT}
 cd /build
-tar -zcvf /build/hercules-${ARCH}-`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
+tar -zcf /build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
