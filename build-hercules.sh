@@ -31,6 +31,7 @@ echo "Installing dependencies..."
 apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
+rm -rf ${BUILD_TARGET}
 cd ${REPO_CHECKOUT}
 make clean
 ./configure ${HERCULES_BUILD_OPTS}
@@ -90,7 +91,6 @@ fi
 echo "Package up the distribution..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp /build/distrib-tmpl/.env ${BUILD_TARGET}
-chmod -R a+rwx ${BUILD_TARGET}
 cd /build
 tar -zcf /build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
 echo "Done!"
