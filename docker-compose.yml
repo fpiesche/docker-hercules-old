@@ -6,10 +6,11 @@ services:
         volumes:
             - .:/build
         environment:
+            # To build a Renewal version, or a server with a different packet version, simply edit this line
             HERCULES_BUILD_OPTS: --disable-renewal --enable-packetver=20180418
-            # To build a Renewal version, or a server with a different packet version, simply edit the
-            # build options above.
-            # For arm64 builds (e.g. on Raspberry Pi 3 or 4 hardware with 64-bit operating systems),
-            # Hercules' internal memory manager must be disabled or the servers will crash on startup. E.g.:
-            # HERCULES_BUILD_OPTS: --disable-renewal --enable-packetver=20180418 --disable-manager
-        command: /build/build-hercules.sh
+            # To override the default repository being checked out (e.g. to build a fork of Hercules):
+            # HERCULES_REPO: https://github.com/HerculesWS/Hercules/
+            # To build a different branch from the repository:
+            # HERCULES_BRANCH: stable
+
+            command: /build/build-hercules.sh
