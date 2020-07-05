@@ -13,4 +13,4 @@ services:
             # To build a different branch from the repository:
             # HERCULES_BRANCH: stable
 
-            command: /build/build-hercules.sh
+        command: /build/build-hercules.sh
