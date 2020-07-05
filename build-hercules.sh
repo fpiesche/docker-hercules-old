@@ -3,9 +3,9 @@
 ARCH=`uname -m`
 BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-default}_${ARCH}
 BUILD_TARGET=/build/${BUILD_IDENTIFIER}
-REPO_CHECKOUT=/build/src
+REPO_CHECKOUT=/build/hercules-src
 
-echo "Building Hercules in ${HERCULES_SERVER_MODE} mode from ${HERCULES_REPO} ${HERCULES_BRANCH} on ${ARCH}."
+echo "Building Hercules in ${HERCULES_SERVER_MODE} mode on ${ARCH}."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
@@ -30,15 +30,8 @@ apt-get install -y gcc git make
 echo "Installing dependencies..."
 apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
-echo "Assuring clean distribution..."
-rm -rf ${BUILD_TARGET}
-
-echo "Cloning Hercules repo..."
-git clone -b ${HERCULES_BRANCH} ${HERCULES_REPO} ${REPO_CHECKOUT}
-
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 cd ${REPO_CHECKOUT}
-make clean
 ./configure ${HERCULES_BUILD_OPTS}
 make
 
