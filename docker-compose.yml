@@ -7,4 +7,9 @@ services:
             - .:/build
         environment:
             HERCULES_BUILD_OPTS: --disable-renewal --enable-packetver=20180418
+            # To build a Renewal version, or a server with a different packet version, simply edit the
+            # build options above.
+            # For arm64 builds (e.g. on Raspberry Pi 3 or 4 hardware with 64-bit operating systems),
+            # Hercules' internal memory manager must be disabled or the servers will crash on startup. E.g.:
+            # HERCULES_BUILD_OPTS: --disable-renewal --enable-packetver=20180418 --disable-manager
         command: /build/build-hercules.sh
