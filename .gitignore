@@ -4,3 +4,4 @@ Hercules
 # Build results
 hercules-*.tar.gz
 hercules/*
+src/*
