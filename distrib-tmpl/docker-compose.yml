@@ -1,9 +1,25 @@
 version: '3.2'
 
 services:
+    game_servers:
+        image: florianpiesche/hercules-__SERVER_MODE__-__PACKET_VER_DEFAULT__
+        restart: on-failure
+        ports:
+            # login server
+            - 6900:6900
+            # character server
+            - 6121:6121
+            # map server
+            - 5121:5121
+        volumes:
+            - configuration:/hercules/conf/import
+            - sql_init:/hercules/sql-files/
+
     db:
         image: mariadb:10.4
         restart: on-failure
+        depends_on:
+            - game_servers
         environment:
             MYSQL_ROOT_PASSWORD: hercroot
             MYSQL_USER: ragnarok
@@ -15,23 +31,9 @@ services:
             - 3306:3306
         volumes:
             - mysql_data:/var/lib/mysql
-            - ./sql-files/${HERCULES_SERVER_TYPE}:/docker-entrypoint-initdb.d
-
-    game_servers:
-        image: hercules
-        restart: on-failure
-        depends_on:
-            - db
-        ports:
-            # login server
-            - 6900:6900
-            # character server
-            - 6121:6121
-            # map server
-            - 5121:5121
-        volumes:
-            - configuration:/hercules/conf/import
+            - sql_init:/docker-entrypoint-initdb.d
 
 volumes:
     mysql_data:
     configuration:
+    sql_init:

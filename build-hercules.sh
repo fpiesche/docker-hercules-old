@@ -64,28 +64,32 @@ rm -rf ${BUILD_TARGET}/conf/import-tmpl
 
 if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    echo "Copy Classic SQL files into distribution..."
-   mkdir -p ${BUILD_TARGET}/sql-files/classic
-   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/classic/1-main.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/classic/2-item_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/classic/3-mob_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/classic/4-mob_skill_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/classic/5-item_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/classic/6-mob_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/classic/8-logs.sql 
+   mkdir -p ${BUILD_TARGET}/sql-files
+   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
    echo "Copy Renewal SQL files into distribution..."
-   mkdir -p ${BUILD_TARGET}/sql-files/renewal
-   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/renewal/1-main.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/renewal/2-item_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/renewal/3-mob_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/renewal/4-mob_skill_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/renewal/5-item_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/renewal/6-mob_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/renewal/8-logs.sql 
+   mkdir -p ${BUILD_TARGET}/sql-files
+   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
+   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
+   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 else
    echo "ERROR: Unknown server mode ${HERCULES_SERVER_MODE}!"
    exit 1
 fi
+
+echo "Modifying docker-compose.yml for distribution..."
+sed -i "s/__PACKET_VER_DEFAULT__/${HERCULES_PACKET_VERSION:-default}/g" ${BUILD_TARGET}/docker-compose.yml
+sed -i "s/__SERVER_MODE__/${HERCULES_SERVER_MODE}/g" ${BUILD_TARGET}/docker-compose.yml
 
 echo "Package up the distribution..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/

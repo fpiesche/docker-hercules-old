@@ -4,9 +4,9 @@
 
 ## Release information
 
-* Hercules release [GIT_VERSION](https://github.com/HerculesWS/Hercules/releases/tag/GIT_VERSION)
-* Server mode: SERVER_MODE
-* Packet version: PACKET_VER
+* Hercules release [__GIT_VERSION__](https://github.com/HerculesWS/Hercules/releases/tag/__GIT_VERSION__)
+* Server mode: __SERVER_MODE__
+* Packet version: __PACKET_VER__
 
 Currently this is only available for arm32v7 and arm64v8 architectures, for use e.g. on Raspberry Pi minicomputers.
 
@@ -18,9 +18,25 @@ Paste the following code block into a file called `docker-compose.yml` in a new 
     version: '3.2'
 
     services:
+        game_servers:
+            image: florianpiesche/hercules-__SERVER_MODE__-__PACKET_VER_DEFAULT__
+            restart: on-failure
+            ports:
+                # login server
+                - 6900:6900
+                # character server
+                - 6121:6121
+                # map server
+                - 5121:5121
+            volumes:
+                - configuration:/hercules/conf/import
+                - sql_init:/hercules/sql-files/
+
         db:
             image: mariadb:10.4
             restart: on-failure
+            depends_on:
+                - game_servers
             environment:
                 MYSQL_ROOT_PASSWORD: hercroot
                 MYSQL_USER: ragnarok
@@ -32,26 +48,12 @@ Paste the following code block into a file called `docker-compose.yml` in a new 
                 - 3306:3306
             volumes:
                 - mysql_data:/var/lib/mysql
-                - ./sql-files/SERVER_MODE:/docker-entrypoint-initdb.d
-
-        game_servers:
-            image: florianpiesche/hercules-SERVER_MODE-default
-            restart: on-failure
-            depends_on:
-                - db
-            ports:
-                # login server
-                - 6900:6900
-                # character server
-                - 6121:6121
-                # map server
-                - 5121:5121
-            volumes:
-                - configuration:/hercules/conf/import
+                - sql_init:/docker-entrypoint-initdb.d
 
     volumes:
         mysql_data:
         configuration:
+        sql_init:
 
 ## Editing server configuration
 
