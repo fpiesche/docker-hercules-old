@@ -3,5 +3,5 @@ Hercules
 src
 
 # Build results
-hercules*
+/hercules*
 !hercules-src
