@@ -21,8 +21,7 @@ for mode in "${servermodes[@]}"; do
             if [[ $? -eq 0 ]]; then
                 echo "Building Docker image for hercules_${mode}_packetver-${packetver:-default}_${arch}..."
                 cd hercules_${mode}_packetver-${packetver:-${PACKETVER_FROM_SOURCE}}_${arch}
-                echo "Now in "`pwd`
-                docker build . --tag=florianpiesche/${DOCKER_REPO}:${arch}
+                docker build . --tag=florianpiesche/${DOCKER_REPO}:${arch} --build-arg ARCH=${arch}
                 echo "Pushing image to Docker Hub as florianpiesche/${DOCKER_REPO}:${arch}"
                 docker push florianpiesche/${DOCKER_REPO}:${arch}
                 docker manifest create --amend florianpiesche/${DOCKER_REPO}:latest florianpiesche/${DOCKER_REPO}:${arch}
