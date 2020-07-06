@@ -17,7 +17,7 @@ for mode in "${servermodes[@]}"; do
             DOCKER_REPO=hercules-${mode}-${packetver:-default}
 
             echo "Building Hercules ${GIT_VERSION} in ${mode} mode for client ${packetver:-default} on ${arch}."
-            UID=${USERID} ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
+            USERID=${UID} ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
             if [[ $? -eq 0 ]]; then
                 echo "Building Docker image for hercules_${mode}_packetver-${packetver:-default}_${arch}..."
                 cd hercules_${mode}_packetver-${packetver:-default}_${arch}
