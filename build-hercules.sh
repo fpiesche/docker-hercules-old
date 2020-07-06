@@ -87,13 +87,15 @@ else
    exit 1
 fi
 
-echo "Modifying docker-compose.yml for distribution..."
+echo "Add remaining files from distribution template..."
+cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
+cp /build/distrib-tmpl/.env ${BUILD_TARGET}
+
+echo "Modify docker-compose.yml for distribution..."
 sed -i "s/__PACKET_VER_DEFAULT__/${HERCULES_PACKET_VERSION:-default}/g" ${BUILD_TARGET}/docker-compose.yml
 sed -i "s/__SERVER_MODE__/${HERCULES_SERVER_MODE}/g" ${BUILD_TARGET}/docker-compose.yml
 
 echo "Package up the distribution..."
-cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
-cp /build/distrib-tmpl/.env ${BUILD_TARGET}
 cd /build
 tar -zcf ${BUILD_ARCHIVE} ${BUILD_TARGET}
 chown -R ${USERID}:${USERID} ${BUILD_TARGET}
