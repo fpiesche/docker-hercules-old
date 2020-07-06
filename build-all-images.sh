@@ -15,12 +15,15 @@ for mode in "${servermodes[@]}"; do
     for packetver in "${packetversions[@]}"; do
         for arch in "${architectures[@]}"; do
             DOCKER_REPO=hercules-${mode}-${packetver:-default}
+            BUILD_TARGET=hercules_${mode}_packetver-${packetver:-${PACKETVER_FROM_SOURCE}}_${arch}
 
             echo "Building Hercules ${GIT_VERSION} in ${mode} mode for client ${packetver:-default} (default: ${PACKETVER_FROM_SOURCE}) on ${arch}."
-            USERID=${UID} ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
+            if [[ ! -d ${BUILD_TARGET} ]]; then
+                USERID=${UID} ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
+            fi
             if [[ $? -eq 0 ]]; then
                 echo "Building Docker image for hercules_${mode}_packetver-${packetver:-default}_${arch}..."
-                cd hercules_${mode}_packetver-${packetver:-${PACKETVER_FROM_SOURCE}}_${arch}
+                cd ${BUILD_TARGET}
                 docker build . --tag=florianpiesche/${DOCKER_REPO}:${arch} --build-arg ARCH=${arch}
                 echo "Pushing image to Docker Hub as florianpiesche/${DOCKER_REPO}:${arch}"
                 docker push florianpiesche/${DOCKER_REPO}:${arch}
@@ -32,7 +35,7 @@ for mode in "${servermodes[@]}"; do
                 sed -i "s/__PACKET_VER_DEFAULT__/${packetver:-default}/g" README.md
                 sed -i "s/__SERVER_MODE__/$mode/g" README.md
                 /usr/libexec/docker/cli-plugins/docker-pushrm docker.io/florianpiesche/${DOCKER_REPO}
-
+                rm -rf ${BUILD_TARGET}
                 cd ..
             else
                 echo "BUILD FAILED"
