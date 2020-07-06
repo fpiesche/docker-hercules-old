@@ -4,6 +4,7 @@ REPO_CHECKOUT=/build/hercules-src
 PACKETVER_FROM_SOURCE=`cat ${REPO_CHECKOUT}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-$PACKETVER_FROM_SOURCE}_${ARCH}
 BUILD_TARGET=/build/${BUILD_IDENTIFIER}
+BUILD_ARCHIVE=/build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz
 
 echo "Building Hercules in ${HERCULES_SERVER_MODE} mode on ${ARCH}."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
@@ -25,10 +26,8 @@ echo "Build options: ${HERCULES_BUILD_OPTS}"
 
 echo "Updating package database..."
 apt-get update
-echo "Installing build tools..."
-apt-get install -y gcc git make
-echo "Installing dependencies..."
-apt-get install -y zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
+echo "Installing build tools and dependencies..."
+apt-get install -y gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
 echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
 rm -rf ${BUILD_TARGET}
@@ -92,5 +91,7 @@ echo "Package up the distribution..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp /build/distrib-tmpl/.env ${BUILD_TARGET}
 cd /build
-tar -zcf /build/${BUILD_IDENTIFIER}_`date +"%Y-%m-%d_%H-%M-%S"`.tar.gz ${BUILD_TARGET}
+tar -zcf ${BUILD_ARCHIVE} ${BUILD_TARGET}
+chown -R ${USERID} ${BUILD_TARGET}
+chown ${USERID} ${BUILD_ARCHIVE}
 echo "Done!"
