@@ -40,7 +40,7 @@ for mode in "${servermodes[@]}"; do
                 exit 1
             fi
         done
+        docker manifest push --purge florianpiesche/hercules-${mode}-${packetver:-default}:latest
     done
 done
 
-docker manifest push --purge florianpiesche/hercules-${mode}-${packetver:-default}:latest
