@@ -1,3 +1,5 @@
+<img style="float: left;" src="https://raw.githubusercontent.com/fpiesche/hercules-docker/master/distrib-tmpl/hercules-icon.png" alt="Hercules logo"/>
+
 # Hercules Ragnarok Online Server
 
 ## Release information
