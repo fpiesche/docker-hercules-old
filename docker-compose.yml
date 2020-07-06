@@ -2,7 +2,6 @@ version: '3.2'
 
 services:
     build:
-        user: $UID
         image: ${ARCH}/ubuntu:18.04
         volumes:
             - .:/build
@@ -14,5 +13,6 @@ services:
             HERCULES_PACKET_VERSION: ${HERCULES_PACKET_VERSION}
             # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
             HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
+            USERID: ${UID:-1000}
 
         command: /build/build-hercules.sh
