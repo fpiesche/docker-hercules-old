@@ -92,6 +92,7 @@ cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp /build/distrib-tmpl/.env ${BUILD_TARGET}
 cd /build
 tar -zcf ${BUILD_ARCHIVE} ${BUILD_TARGET}
-chown -R ${USERID} ${BUILD_TARGET}
+chown -R ${USERID}:${USERID} ${BUILD_TARGET}
+chmod -R a+rwx ${BUILD_TARGET} 
 chown ${USERID} ${BUILD_ARCHIVE}
 echo "Done!"
