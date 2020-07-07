@@ -1,9 +1,9 @@
 #!/bin/bash
 
 echo "Updating package database..."
-apt-get update > /dev/null
+apt-get update
 echo "Installing build tools and dependencies..."
-apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev > /dev/null
+apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
 REPO_CHECKOUT=/build/hercules-src
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
