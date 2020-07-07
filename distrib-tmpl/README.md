@@ -8,9 +8,6 @@
 * Server mode: __SERVER_MODE__
 * Packet version: __PACKET_VER__
 
-Currently this is only available for arm32v7 and arm64v8 architectures, for use e.g. on Raspberry Pi minicomputers.
-
-
 # Usage
 
 Paste the following code block into a file called `docker-compose.yml` in a new directory and run `docker-compose up` to bring up a server.

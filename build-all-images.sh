@@ -35,8 +35,8 @@ for mode in "${servermodes[@]}"; do
                 sed -i "s/__PACKET_VER_DEFAULT__/${packetver:-default}/g" README.md
                 sed -i "s/__SERVER_MODE__/$mode/g" README.md
                 /usr/libexec/docker/cli-plugins/docker-pushrm docker.io/florianpiesche/${DOCKER_REPO}
-                rm -rf ${BUILD_TARGET}
                 cd ..
+                rm -rf ${BUILD_TARGET}
             else
                 echo "BUILD FAILED"
                 exit 1
