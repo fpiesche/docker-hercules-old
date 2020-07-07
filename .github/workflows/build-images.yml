@@ -11,13 +11,13 @@ jobs:
                 ARCH: ["arm32v7", "arm64v8", "amd64"]
             runs-on: ubuntu-latest
             steps:
-                - uses: actions/checkout@v2
                 - name: Build Hercules
+                  uses: actions/checkout@v2
                   # ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
                   run: docker-compose up -d
-                    
-                - uses: mr-smithers-excellent/docker-build-push@v3
+
                 - name: Build image
+                  uses: mr-smithers-excellent/docker-build-push@v3
                   with:
                     image: florianpiesche/hercules-${HERCULES_SERVER_MODE}-${HERCULES_PACKET_VERSION:-default}
                     tag: ${ARCH}
