@@ -68,6 +68,7 @@ cp ${REPO_CHECKOUT}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
 cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
 cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
 cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
+cp ${REPO_CHECKOUT}/sql-files/mob_skill_db2.sql ${BUILD_TARGET}/sql-files/7-mob_skill_db2.sql 
 cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 
 if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
