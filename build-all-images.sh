@@ -1,7 +1,6 @@
 #!/bin/bash
 
-declare -a architectures=("arm32v7" "arm64v8")
-# declare -a architectures=("arm32v7" "arm64v8" "i386" "amd64")
+declare -a architectures=("arm32v7" "arm64v8" "i386" "amd64")
 declare -a servermodes=("classic" "renewal")
 declare -a packetversions=("" "20180418")
 
