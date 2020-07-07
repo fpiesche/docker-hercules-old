@@ -87,6 +87,10 @@ else
    exit 1
 fi
 
+echo "Copying update SQL files into distribution..."
+mkdir -p ${BUILD_TARGET}/sql-files/upgrades
+cp ${REPO_CHECKOUT}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
+
 echo "Add remaining files from distribution template..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
 cp /build/distrib-tmpl/.env ${BUILD_TARGET}
