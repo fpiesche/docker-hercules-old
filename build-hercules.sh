@@ -65,34 +65,30 @@ cp ${REPO_CHECKOUT}/map-server ${BUILD_TARGET}/
 echo "Remove unnecessary configuration templates from distribution..."
 rm -rf ${BUILD_TARGET}/conf/import-tmpl
 
+echo "Copying common SQL files into distribution..."
+mkdir -p ${BUILD_TARGET}/sql-files/upgrades
+cp ${REPO_CHECKOUT}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
+cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
+cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
+cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
+cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
+
 if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    echo "Copy Classic SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
-   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
    cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
    cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
    cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
    echo "Copy Renewal SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
-   cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
    cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
    cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
    cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
-   cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 else
    echo "ERROR: Unknown server mode ${HERCULES_SERVER_MODE}!"
    exit 1
 fi
-
-echo "Copying update SQL files into distribution..."
-mkdir -p ${BUILD_TARGET}/sql-files/upgrades
-cp ${REPO_CHECKOUT}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
 
 echo "Add remaining files from distribution template..."
 cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
