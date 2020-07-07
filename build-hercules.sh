@@ -1,15 +1,19 @@
 #!/bin/bash
 
+echo "Updating package database..."
+apt-get update > /dev/null
+echo "Installing build tools and dependencies..."
+apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev > /dev/null
+
 REPO_CHECKOUT=/build/hercules-src
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
 PACKETVER_FROM_SOURCE=`cat ${REPO_CHECKOUT}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
+GIT_VERSION=`cd ${REPO_CHECKOUT}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd /build/`
 BUILD_IDENTIFIER=hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION:-$PACKETVER_FROM_SOURCE}_${ARCH}
 BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=/build/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
-GIT_VERSION=`git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD`
 
-
-echo "Building Hercules in ${HERCULES_SERVER_MODE} mode on ${ARCH}."
+echo "Building Hercules ${GIT_VERSION} in ${HERCULES_SERVER_MODE} mode on ${ARCH}."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
@@ -25,14 +29,7 @@ if [[ ! -z "${HERCULES_PACKET_VERSION}" ]]; then
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --enable-packetver=${HERCULES_PACKET_VERSION}"
 fi
 
-echo "Build options: ${HERCULES_BUILD_OPTS}"
-
-echo "Updating package database..."
-apt-get update
-echo "Installing build tools and dependencies..."
-apt-get install -y gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
-
-echo "Build Hercules with ${HERCULES_BUILD_OPTS}..."
+echo "Build Hercules with options: ${HERCULES_BUILD_OPTS}..."
 rm -rf ${BUILD_TARGET}
 cd ${REPO_CHECKOUT}
 make clean
