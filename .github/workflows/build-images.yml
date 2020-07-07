@@ -1,0 +1,27 @@
+name: build-images
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                HERCULES_SERVER_MODE: ["classic", "renewal"]
+                HERCULES_PACKET_VERSION: ["20180418", ""]
+                ARCH: ["arm32v7", "arm64v8", "amd64"]
+            runs-on: ubuntu-latest
+            steps:
+                - uses: actions/checkout@v2
+                - name: Build Hercules
+                  # ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
+                  run: docker-compose up -d
+                    
+                - uses: mr-smithers-excellent/docker-build-push@v3
+                - name: Build image
+                  with:
+                    image: florianpiesche/hercules-${HERCULES_SERVER_MODE}-${HERCULES_PACKET_VERSION:-default}
+                    tag: ${ARCH}
+                    registry: docker.io
+                    dockerfile: hercules_${HERCULES_SERVER_MODE}_packetver-${HERCULES_PACKET_VERSION}_${ARCH}/Dockerfile
+                    username: ${{ secrets.DOCKER_USERNAME }}
+                    password: ${{ secrets.DOCKER_PASSWORD }}
