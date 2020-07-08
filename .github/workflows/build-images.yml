@@ -27,10 +27,5 @@ jobs:
           HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
 
       - name: Build image
-        run: docker build . -t florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:${{ matrix.ARCH }}
+        run: ARCH=${{ matrix.ARCH }} docker build . -t florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:${{ matrix.ARCH }}
         working-directory: ${{ github.workspace }}/hercules_distrib
-        env:
-          ARCH: ${{ matrix.ARCH }}
-          HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
-          HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
-  
