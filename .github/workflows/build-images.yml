@@ -10,7 +10,7 @@ jobs:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
         HERCULES_PACKET_VERSION: ["20180418", ""]
         # ARCH: ["amd64", "arm32v7", "arm64v8"]
-        ARCH ["amd64"]
+        ARCH: ["amd64"]
 
     steps:
       - name: Check out repo
