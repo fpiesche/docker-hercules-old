@@ -9,18 +9,16 @@ jobs:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
         HERCULES_PACKET_VERSION: ["20180418", "default"]
-        # ARCH: ["amd64", "arm32v7", "arm64v8"]
-        ARCH: ["amd64"]
+        ARCH: ["amd64", "arm32v7", "arm64v8"]
+        # ARCH: ["amd64"]
 
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-        # ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
 
       - name: Build Hercules
         run: |
           docker-compose up
-        working-directory: ${{ GITHUB_WORKSPACE }}
         env:
           ARCH: ${{ matrix.ARCH }}
           HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
@@ -28,7 +26,6 @@ jobs:
 
       - name: Build image
         uses: mr-smithers-excellent/docker-build-push@v3
-        working-directory: ${{ GITHUB_WORKSPACE }}
         with:
           image: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           tag: ${{ matrix.ARCH }}

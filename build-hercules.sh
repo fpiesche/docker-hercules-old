@@ -32,6 +32,8 @@ fi
 echo "Build Hercules with options: ${HERCULES_BUILD_OPTS}..."
 rm -rf ${BUILD_TARGET}
 cd ${REPO_CHECKOUT}
+echo "Now in "`pwd`
+echo `ls`
 make clean
 ./configure ${HERCULES_BUILD_OPTS}
 if [[ $? -ne 0 ]]; then
