@@ -56,6 +56,6 @@ jobs:
           image: florianpiesche/hercules-${matrix.HERCULES_SERVER_MODE}-${matrix.HERCULES_PACKET_VERSION:-default}
           tag: ${matrix.ARCH}
           registry: docker.io
-          dockerfile: hercules_${matrix.HERCULES_SERVER_MODE}_packetver-${matrix.HERCULES_PACKET_VERSION}_${matrix.ARCH}/Dockerfile
+          dockerfile: hercules_distrib/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
