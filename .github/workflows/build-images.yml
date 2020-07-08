@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Hercules
-        run: ./build-hercules.sh
+        run: sudo ./build-hercules.sh
         working-directory: ${{ github.workspace }}
         env:
           WORKSPACE: ${{ github.workspace }}
