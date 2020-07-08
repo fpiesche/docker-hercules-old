@@ -43,7 +43,7 @@ jobs:
         # ARCH=${arch} HERCULES_SERVER_MODE=${mode} HERCULES_PACKET_VERSION=${packetver} docker-compose up
 
       - name: Build Hercules
-      - uses: uraimo/run-on-arch-action@v1.0.9
+        uses: uraimo/run-on-arch-action@v1.0.9
         with:
           architecture: ${matrix.ARCH}
           distribution: ubuntu18.04
