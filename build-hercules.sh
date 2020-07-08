@@ -5,7 +5,7 @@ apt-get update
 echo "Installing build tools and dependencies..."
 apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
-REPO_CHECKOUT=/build/hercules-src
+REPO_CHECKOUT=${WORKSPACE:-/build/hercules-src}
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
 PACKETVER_FROM_SOURCE=`cat ${REPO_CHECKOUT}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 GIT_VERSION=`cd ${REPO_CHECKOUT}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd /build/`
