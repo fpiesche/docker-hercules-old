@@ -22,9 +22,9 @@ jobs:
       - name: Build image
         uses: mr-smithers-excellent/docker-build-push@v3
         with:
-          image: florianpiesche/hercules-${matrix:HERCULES_SERVER_MODE}-${matrix:HERCULES_PACKET_VERSION:-default}
-          tag: ${matrix:ARCH}
+          image: florianpiesche/hercules-${matrix.HERCULES_SERVER_MODE}-${matrix.HERCULES_PACKET_VERSION:-default}
+          tag: ${matrix.ARCH}
           registry: docker.io
-          dockerfile: hercules_${matrix:HERCULES_SERVER_MODE}_packetver-${matrix:HERCULES_PACKET_VERSION}_${matrix:ARCH}/Dockerfile
+          dockerfile: hercules_${matrix.HERCULES_SERVER_MODE}_packetver-${matrix.HERCULES_PACKET_VERSION}_${matrix.ARCH}/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
