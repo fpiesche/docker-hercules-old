@@ -5,13 +5,15 @@ apt-get update
 echo "Installing build tools and dependencies..."
 apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
-HERCULES_SRC=${HERCULES_SRC:-./hercules-src}
+WORKSPACE="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" 
+
+HERCULES_SRC=${WORKSPACE}/hercules-src
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
 PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
-GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd /build/`
+GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
 BUILD_IDENTIFIER=hercules_distrib
-BUILD_TARGET=/build/${BUILD_IDENTIFIER}
-BUILD_ARCHIVE=/build/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
+BUILD_TARGET=${WORKSPACE}/${BUILD_IDENTIFIER}
+BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
 echo "Building Hercules ${GIT_VERSION} in ${HERCULES_SERVER_MODE} mode."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
@@ -91,8 +93,8 @@ else
 fi
 
 echo "Add remaining files from distribution template..."
-cp -r /build/distrib-tmpl/* ${BUILD_TARGET}/
-cp /build/distrib-tmpl/.env ${BUILD_TARGET}
+cp -r ${WORKSPACE}/distrib-tmpl/* ${BUILD_TARGET}/
+cp ${WORKSPACE}/distrib-tmpl/.env ${BUILD_TARGET}
 
 echo "Adding build version file to distribution..."
 VERSION_FILE=${BUILD_TARGET}/version.ini
@@ -108,7 +110,7 @@ sed -i "s/__PACKET_VER_DEFAULT__/${HERCULES_PACKET_VERSION:-default}/g" ${BUILD_
 sed -i "s/__SERVER_MODE__/${HERCULES_SERVER_MODE}/g" ${BUILD_TARGET}/docker-compose.yml
 
 echo "Package up the distribution..."
-cd /build
+cd ${WORKSPACE}
 tar -zcf ${BUILD_ARCHIVE} ${BUILD_TARGET}
 chown -R ${USERID}:${USERID} ${BUILD_TARGET}
 chmod -R a+rwx ${BUILD_TARGET} 
