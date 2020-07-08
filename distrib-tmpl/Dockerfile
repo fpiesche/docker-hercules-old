@@ -1,4 +1,4 @@
-ARG ARCH=${ARCH}
+ARG ARCH=amd64
 
 FROM ${ARCH}/ubuntu:18.04
 RUN useradd --no-log-init -r hercules
