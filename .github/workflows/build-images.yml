@@ -17,7 +17,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Hercules
-        run: build-hercules.sh
+        run: |
+          ${{ env.GITHUB_WORKSPACE }}/build-hercules.sh
         env:
           WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
           ARCH: ${{ matrix.ARCH }}
