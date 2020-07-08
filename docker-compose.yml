@@ -2,8 +2,7 @@ version: '3.2'
 
 services:
     build:
-        image: ubuntu:18.04
-        platform: ${ARCH}
+        image: ${ARCH}/ubuntu:18.04
         volumes:
             - .:/build
         environment:

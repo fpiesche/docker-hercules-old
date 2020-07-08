@@ -9,7 +9,8 @@ jobs:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
         HERCULES_PACKET_VERSION: ["20180418", ""]
-        PLATFORM: ["linux/amd64", "linux/arm/v7", "linux/arm64"]
+        # ARCH: ["amd64", "arm32v7", "arm64v8"]
+        ARCH ["amd64"]
 
     steps:
       - name: Check out repo
@@ -20,7 +21,7 @@ jobs:
         run: |
           docker-compose up
         env:
-          ARCH: ${ matrix.PLATFORM }
+          ARCH: ${ matrix.ARCH }
           HERCULES_SERVER_MODE: ${ matrix.HERCULES_SERVER_MODE }
           HERCULES_PACKET_VERSION: ${ matrix.HERCULES_PACKET_VERSION }
 
@@ -34,7 +35,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         env:
-          ARCH: ${ matrix.PLATFORM }
+          ARCH: ${ matrix.ARCH }
           HERCULES_SERVER_MODE: ${ matrix.HERCULES_SERVER_MODE }
           HERCULES_PACKET_VERSION: ${ matrix.HERCULES_PACKET_VERSION }
   
