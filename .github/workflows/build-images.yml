@@ -17,7 +17,7 @@ jobs:
 
       - name: Build Hercules
         run: |
-          docker-compose up -d
+          docker-compose up
 
       - name: Build image
         uses: mr-smithers-excellent/docker-build-push@v3
