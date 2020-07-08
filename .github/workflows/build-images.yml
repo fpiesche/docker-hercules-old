@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", ""]
+        HERCULES_PACKET_VERSION: ["20180418", "default"]
         # ARCH: ["amd64", "arm32v7", "arm64v8"]
         ARCH: ["amd64"]
 
@@ -28,7 +28,7 @@ jobs:
       - name: Build image
         uses: mr-smithers-excellent/docker-build-push@v3
         with:
-          image: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION:-default }}
+          image: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           tag: ${{ matrix.ARCH }}
           registry: docker.io
           dockerfile: hercues_distrib/Dockerfile
