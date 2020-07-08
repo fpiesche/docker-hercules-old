@@ -30,7 +30,7 @@ jobs:
           image: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           tag: ${{ matrix.ARCH }}
           registry: docker.io
-          dockerfile: hercules_distrib/Dockerfile
+          dockerfile: ${{ env.GITHUB_WORKSPACE }}/hercules_distrib/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         env:
