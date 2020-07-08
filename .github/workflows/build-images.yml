@@ -20,7 +20,6 @@ jobs:
         run: sudo ./build-hercules.sh
         working-directory: ${{ github.workspace }}
         env:
-          WORKSPACE: ${{ github.workspace }}
           ARCH: ${{ matrix.ARCH }}
           HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
           HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}

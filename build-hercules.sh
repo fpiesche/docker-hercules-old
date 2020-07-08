@@ -5,10 +5,10 @@ apt-get update
 echo "Installing build tools and dependencies..."
 apt-get install -y git gcc make zlib1g-dev libmysqlclient-dev libpcre3-dev libssl-dev
 
-REPO_CHECKOUT=${WORKSPACE:-/build/hercules-src}
+HERCULES_SRC=${HERCULES_SRC:-./hercules-src}
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
-PACKETVER_FROM_SOURCE=`cat ${REPO_CHECKOUT}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
-GIT_VERSION=`cd ${REPO_CHECKOUT}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd /build/`
+PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
+GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd /build/`
 BUILD_IDENTIFIER=hercules_distrib
 BUILD_TARGET=/build/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=/build/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
@@ -31,7 +31,7 @@ fi
 
 echo "Build Hercules with options: ${HERCULES_BUILD_OPTS}..."
 rm -rf ${BUILD_TARGET}
-cd ${REPO_CHECKOUT}
+cd ${HERCULES_SRC}
 echo "Now in "`pwd`
 echo `ls`
 make clean
@@ -52,39 +52,39 @@ for path in "${serverdata[@]}"
 do
    echo "Copying $path to distribution..."
    mkdir -p ${BUILD_TARGET}/$path
-   cp -r ${REPO_CHECKOUT}/$path/* ${BUILD_TARGET}/$path/
+   cp -r ${HERCULES_SRC}/$path/* ${BUILD_TARGET}/$path/
 done
 
 echo "Copying executables into distribution..."
-cp ${REPO_CHECKOUT}/athena-start ${BUILD_TARGET}/
-cp ${REPO_CHECKOUT}/char-server ${BUILD_TARGET}/
-cp ${REPO_CHECKOUT}/login-server ${BUILD_TARGET}/
-cp ${REPO_CHECKOUT}/map-server ${BUILD_TARGET}/
+cp ${HERCULES_SRC}/athena-start ${BUILD_TARGET}/
+cp ${HERCULES_SRC}/char-server ${BUILD_TARGET}/
+cp ${HERCULES_SRC}/login-server ${BUILD_TARGET}/
+cp ${HERCULES_SRC}/map-server ${BUILD_TARGET}/
 
 echo "Remove unnecessary configuration templates from distribution..."
 rm -rf ${BUILD_TARGET}/conf/import-tmpl
 
 echo "Copying common SQL files into distribution..."
 mkdir -p ${BUILD_TARGET}/sql-files/upgrades
-cp ${REPO_CHECKOUT}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
-cp ${REPO_CHECKOUT}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
-cp ${REPO_CHECKOUT}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/mob_skill_db2.sql ${BUILD_TARGET}/sql-files/7-mob_skill_db2.sql 
-cp ${REPO_CHECKOUT}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
+cp ${HERCULES_SRC}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
+cp ${HERCULES_SRC}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
+cp ${HERCULES_SRC}/sql-files/item_db2.sql ${BUILD_TARGET}/sql-files/5-item_db2.sql 
+cp ${HERCULES_SRC}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql 
+cp ${HERCULES_SRC}/sql-files/mob_skill_db2.sql ${BUILD_TARGET}/sql-files/7-mob_skill_db2.sql 
+cp ${HERCULES_SRC}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 
 if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    echo "Copy Classic SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
-   cp ${REPO_CHECKOUT}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
+   cp ${HERCULES_SRC}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
+   cp ${HERCULES_SRC}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
+   cp ${HERCULES_SRC}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
 elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
    echo "Copy Renewal SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
-   cp ${REPO_CHECKOUT}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
-   cp ${REPO_CHECKOUT}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
+   cp ${HERCULES_SRC}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
+   cp ${HERCULES_SRC}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
+   cp ${HERCULES_SRC}/sql-files/mob_skill_db_re.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
 else
    echo "ERROR: Unknown server mode ${HERCULES_SERVER_MODE}!"
    exit 1
