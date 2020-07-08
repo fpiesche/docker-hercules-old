@@ -19,7 +19,7 @@ jobs:
       - name: Build Hercules
         run: build-hercules.sh
         env:
-          WORKSPACE: ${{ GITHUB_WORKSPACE }}
+          WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
           ARCH: ${{ matrix.ARCH }}
           HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
           HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
