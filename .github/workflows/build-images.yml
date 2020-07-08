@@ -14,10 +14,12 @@ jobs:
 
     steps:
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
+        with:
+          submodules: recursive
 
       - name: Build Hercules
-        run: sudo ./build-hercules.sh
+        run: docker-compose up
         working-directory: ${{ github.workspace }}
         env:
           ARCH: ${{ matrix.ARCH }}
