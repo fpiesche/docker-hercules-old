@@ -41,6 +41,24 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           tag_with_ref: true
-          tags: ${{ matrix.ARCH }},latest
+          tags: ${{ matrix.ARCH }}
           build_args: ARCH=${{ matrix.ARCH }}
           path: ${{ github.workspace }}/hercules_distrib
+
+  build-manifests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        HERCULES_SERVER_MODE: ["classic", "renewal"]
+        HERCULES_PACKET_VERSION: ["20180418", "default"]
+        
+      - name: Add images to manifest
+        run: |
+          docker manifest create \
+          florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest \
+          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:amd64 \
+          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm32v7 \
+          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm64v8
+
+      - name: Push manifest
+        run: docker manifest push florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
