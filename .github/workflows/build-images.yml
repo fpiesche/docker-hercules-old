@@ -20,7 +20,7 @@ jobs:
         run: ./build-hercules.sh
         working-directory: ${{ github.workspace }}
         env:
-          WORKSPACE: ${{ env.GITHUB_WORKSPACE }}
+          WORKSPACE: ${{ github.workspace }}
           ARCH: ${{ matrix.ARCH }}
           HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
           HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
@@ -31,7 +31,7 @@ jobs:
           image: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           tag: ${{ matrix.ARCH }}
           registry: docker.io
-          dockerfile: ${{ env.GITHUB_WORKSPACE }}/hercules_distrib/Dockerfile
+          dockerfile: ${{ github.workspace }}/hercules_distrib/Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
         env:
