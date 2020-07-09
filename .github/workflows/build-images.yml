@@ -47,6 +47,7 @@ jobs:
 
   build-manifests:
     runs-on: ubuntu-latest
+    needs: build
     strategy:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
@@ -60,6 +61,10 @@ jobs:
           --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:amd64 \
           --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm32v7 \
           --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm64v8
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
 
       - name: Push manifest
         run: docker manifest push florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
