@@ -51,7 +51,8 @@ jobs:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
         HERCULES_PACKET_VERSION: ["20180418", "default"]
-        
+
+    steps:
       - name: Add images to manifest
         run: |
           docker manifest create \
