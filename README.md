@@ -1,3 +1,5 @@
+![build-images](https://github.com/fpiesche/hercules-docker/workflows/build-images/badge.svg)
+
 # hercules-docker
 
 A Docker setup for building and containerising the Ragnarok Online server emulator Hercules
