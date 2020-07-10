@@ -1,7 +1,6 @@
-# Hercules git repository
-Hercules
-src
-
 # Build results
 /hercules*
+
+# Exempt submodules from the ignore
 !hercules-src
+!hercules-admin
