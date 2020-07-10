@@ -16,8 +16,15 @@ Paste the following code block into a file called `docker-compose.yml` in a new 
 
     services:
         game_servers:
-            image: florianpiesche/hercules-__SERVER_MODE__-__PACKET_VER_DEFAULT__
+            image: florianpiesche/hercules-${SERVER_MODE:-classic}-${PACKETVER:-20180418}
             restart: on-failure
+            environment:
+                MYSQL_USER: ${MYSQL_USER:-ragnarok}
+                MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ragnarok}
+                MYSQL_DATABASE: ${MYSQL_DATABASE:-ragnarok}
+                MYSQL_HOST: ${MYSQL_HOST:-db}
+                INTERSERVER_USER: ${INTERSERVER_USER:-wisp}
+                INTERSERVER_PASSWORD: ${INTERSERVER_PASSWORD:-wisp}
             ports:
                 # login server
                 - 6900:6900
@@ -35,12 +42,13 @@ Paste the following code block into a file called `docker-compose.yml` in a new 
             depends_on:
                 - game_servers
             environment:
-                MYSQL_ROOT_PASSWORD: hercroot
-                MYSQL_USER: ragnarok
-                MYSQL_PASSWORD: ragnarok
-                MYSQL_DATABASE: ragnarok
-                INTERSERVER_USER: wisp
-                INTERSERVER_PASSWORD: wisp
+                MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-hercroot}
+                MYSQL_USER: ${MYSQL_USER:-ragnarok}
+                MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ragnarok}
+                MYSQL_DATABASE: ${MYSQL_DATABASE:-ragnarok}
+                MYSQL_HOST: ${MYSQL_HOST:-db}
+                INTERSERVER_USER: ${INTERSERVER_USER:-wisp}
+                INTERSERVER_PASSWORD: ${INTERSERVER_PASSWORD:-wisp}
             ports:
                 - 3306:3306
             volumes:

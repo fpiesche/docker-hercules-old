@@ -2,7 +2,8 @@ ARG ARCH=amd64
 
 FROM ${ARCH}/ubuntu:18.04
 RUN useradd --no-log-init -r hercules
-RUN apt update && apt install -y libmysqlclient20 libmariadb3 nano
+RUN apt update && apt install -y libmysqlclient20 libmariadb3 nano python3-pip
+RUN pip3 install dataset dateparser
 COPY --chown=hercules ./ /hercules/
 
 # Login server
