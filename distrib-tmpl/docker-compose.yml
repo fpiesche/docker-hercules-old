@@ -32,7 +32,6 @@ services:
             MYSQL_USER: ${MYSQL_USER:-ragnarok}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ragnarok}
             MYSQL_DATABASE: ${MYSQL_DATABASE:-ragnarok}
-            MYSQL_HOST: ${MYSQL_HOST:-db}
             INTERSERVER_USER: ${INTERSERVER_USER:-wisp}
             INTERSERVER_PASSWORD: ${INTERSERVER_PASSWORD:-wisp}
         ports:
