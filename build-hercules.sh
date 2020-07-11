@@ -31,6 +31,11 @@ if [[ ! -z "${HERCULES_PACKET_VERSION}" && ${HERCULES_PACKET_VERSION} != "defaul
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --enable-packetver=${HERCULES_PACKET_VERSION}"
 fi
 
+# Disable Renewal on Classic mode builds
+if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
+   HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-renewal"
+fi
+
 echo "Build Hercules with options: ${HERCULES_BUILD_OPTS}..."
 rm -rf ${BUILD_TARGET}
 cd ${HERCULES_SRC}
