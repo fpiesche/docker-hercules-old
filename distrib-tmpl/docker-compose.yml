@@ -19,8 +19,13 @@ services:
             # map server
             - 5121:5121
         volumes:
-            - configuration:/hercules/conf/import
+            - configuration:/hercules/conf/
             - sql_init:/hercules/sql-files/
+            # If you want to edit Hercules files outside of the configuration,
+            # use lines like this. Note that this may cause issues with updates.
+            # Also add the name of the volume (the value before the :) to the
+            # "volumes" section at the very bottom of the file.
+            # - hercules_npc:/hercules/npc
 
     db:
         image: mariadb:10.4
