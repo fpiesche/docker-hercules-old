@@ -15,6 +15,9 @@ BUILD_IDENTIFIER=hercules_distrib
 BUILD_TARGET=${WORKSPACE}/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
+# Patch out Hercules' compile root check to speed up builds by literally a minute
+sed -i -e 's/"\$euid\" == \"0\"/\"\$euid\" == \"-1\"/' ${HERCULES_SRC}/configure.ac
+
 echo "Building Hercules ${GIT_VERSION} in ${HERCULES_SERVER_MODE} mode."
 echo "Distribution will be assembled in ${BUILD_TARGET}."
 
@@ -102,7 +105,7 @@ cp -r ${WORKSPACE}/distrib-tmpl/* ${BUILD_TARGET}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${BUILD_TARGET}
 
 echo "Adding build version file to distribution..."
-VERSION_FILE=${BUILD_TARGET}/version.ini
+VERSION_FILE=${BUILD_TARGET}/version_info.ini
 echo "[version_info]" > ${VERSION_FILE}
 echo "git_version="${GIT_VERSION} >> ${VERSION_FILE}
 echo "packet_version="${HERCULES_PACKET_VERSION:-${PACKETVER_FROM_SOURCE}} >> ${VERSION_FILE}
