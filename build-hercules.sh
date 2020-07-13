@@ -102,12 +102,11 @@ else
 fi
 
 echo "Add remaining files from distribution template..."
-cp -r ${WORKSPACE}/distrib-tmpl/* ${BUILD_TARGET}/
-cp ${WORKSPACE}/distrib-tmpl/.env ${BUILD_TARGET}
+cp -r ${WORKSPACE}/distrib-tmpl/* ${DISTRIB_PATH}/
+cp ${WORKSPACE}/distrib-tmpl/.env ${DISTRIB_PATH}
 
 echo "Add Autolycus to distribution."
-mkdir -o ${DISTRIB_PATH}/autolycus
-cp -r ${WORKSPACE}/hercules-admin/* ${DISTRIB_PATH}/autolycus/
+cp -r ${WORKSPACE}/autolycus ${DISTRIB_PATH}
 
 echo "Adding build version file to distribution..."
 VERSION_FILE=${BUILD_TARGET}/version_info.ini
@@ -124,8 +123,8 @@ sed -i "s/__HERCULES_SERVER_MODE__/${HERCULES_SERVER_MODE:-classic}/g" ${BUILD_T
 
 echo "Package up the distribution..."
 cd ${WORKSPACE}
-tar -zcf ${BUILD_ARCHIVE} ${BUILD_TARGET}
-chown -R ${USERID}:${USERID} ${BUILD_TARGET}
-chmod -R a+rwx ${BUILD_TARGET} 
+tar -zcf ${BUILD_ARCHIVE} ${DISTRIB_PATH}
+chown -R ${USERID}:${USERID} ${DISTRIB_PATH}
+chmod -R a+rwx ${DISTRIB_PATH} 
 chown ${USERID} ${BUILD_ARCHIVE}
 echo "Done!"
