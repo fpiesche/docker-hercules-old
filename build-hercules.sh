@@ -11,15 +11,16 @@ HERCULES_SRC=${WORKSPACE}/hercules-src
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
 PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
-BUILD_IDENTIFIER=hercules_distrib
-BUILD_TARGET=${WORKSPACE}/${BUILD_IDENTIFIER}
+BUILD_IDENTIFIER=hercules
+DISTRIB_PATH=${WORKSPACE}/distrib
+BUILD_TARGET=${DISTRIB_PATH}/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
 # Patch out Hercules' compile root check to speed up builds by literally a minute
 sed -i -e 's/"\$euid\" == \"0\"/\"\$euid\" == \"-1\"/' ${HERCULES_SRC}/configure.ac
 
 echo "Building Hercules ${GIT_VERSION} in ${HERCULES_SERVER_MODE} mode."
-echo "Distribution will be assembled in ${BUILD_TARGET}."
+echo "Distribution will be assembled in ${DISTRIB_PATH}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
@@ -103,6 +104,10 @@ fi
 echo "Add remaining files from distribution template..."
 cp -r ${WORKSPACE}/distrib-tmpl/* ${BUILD_TARGET}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${BUILD_TARGET}
+
+echo "Add Autolycus to distribution."
+mkdir -o ${DISTRIB_PATH}/autolycus
+cp -r ${WORKSPACE}/hercules-admin/* ${DISTRIB_PATH}/autolycus/
 
 echo "Adding build version file to distribution..."
 VERSION_FILE=${BUILD_TARGET}/version_info.ini
