@@ -2,9 +2,6 @@
 	path = hercules-src
 	url = https://github.com/HerculesWS/Hercules/
 
-[submodule "hercules-admin"]
-	path = hercules-admin
-	url = https://github.com/fpiesche/hercules-admin/
 [submodule "autolycus"]
 	path = autolycus
-	url = git@github.com:fpiesche/autolycus.git
+	url = https://github.com/fpiesche/autolycus/
