@@ -16,11 +16,15 @@
         {
             "label": "Build Docker",
             "type": "shell",
-            "command": "docker build . --tag hercules-devel --build-arg ARCH=${input:arch}"
+            "command": "docker build . --tag hercules-devel --build-arg ARCH=${input:arch}",
+            "problemMatcher": []
         },
         {
             "label": "Build All",
-            "dependsOn": ["Build Hercules", "Build Docker"],
+            "dependsOn": [
+                "Build Hercules",
+                "Build Docker"
+            ],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -41,7 +45,8 @@
           "id": "arch",
           "type": "pickString",
           "options": ["arm32v7", "arm64v8", "amd64"],
-          "default": "arm32v7"
+          "default": "arm32v7",
+          "description": "The architecture to build Hercules and the Docker container for."
           // type specific configuration attributes
         }
       ]
