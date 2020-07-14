@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
     game_servers:
-        image: florianpiesche/hercules-__HERCULES_SERVER_MODE__-__PACKET_VER_DEFAULT__
+        image: hercules
         restart: on-failure
         environment:
             MYSQL_USER: ${MYSQL_USER:-ragnarok}

@@ -17,7 +17,7 @@
         {
             "label": "Build Docker",
             "type": "shell",
-            "command": "docker build . --tag hercules-devel --build-arg ARCH=${input:arch}",
+            "command": "docker build . --tag hercules --build-arg ARCH=${input:arch}",
             "problemMatcher": [],
             "group": "build"
         },
