@@ -20,12 +20,11 @@
         },
         {
             "label": "Build All",
-            "type": "shell",
-            "command": "docker-compose up; cd ${workspace}/distrib; docker build . --tag hercules-devel --build-arg ARCH=${input:arch}",
-            "options": {
-                "env": {
-                    "ARCH": "${input:arch}"
-                }
+            "dependsOn": ["Build Hercules", "Build Docker"],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             }
         },
         {
