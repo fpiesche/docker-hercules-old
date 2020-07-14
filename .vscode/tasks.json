@@ -11,13 +11,24 @@
                 "env": {
                     "ARCH": "${input:arch}"
                 }
-            }
+            },
+            "group": "build"
         },
         {
             "label": "Build Docker",
             "type": "shell",
             "command": "docker build . --tag hercules-devel --build-arg ARCH=${input:arch}",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Run Docker",
+            "type": "shell",
+            "command": "docker-compose up",
+            "options": {
+                "cwd": "distrib"
+            },
+            "group": "test"
         },
         {
             "label": "Build All",
@@ -32,13 +43,14 @@
             }
         },
         {
-            "label": "Run Docker",
-            "type": "shell",
-            "command": "docker-compose up",
-            "options": {
-                "cwd": "${workspace}/distrib"
-            }
-        }
+            "label": "Rebuild and run Docker only",
+            "dependsOn": [
+                "Build Docker",
+                "Run Docker"
+            ],
+            "problemMatcher": [],
+            "group": "build"
+        },
     ],
     "inputs": [
         {
@@ -46,8 +58,7 @@
           "type": "pickString",
           "options": ["arm32v7", "arm64v8", "amd64"],
           "default": "arm32v7",
-          "description": "The architecture to build Hercules and the Docker container for."
-          // type specific configuration attributes
+          "description": "Select the architecture to compile."
         }
       ]
 }
