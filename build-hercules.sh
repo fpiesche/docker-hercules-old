@@ -117,10 +117,6 @@ echo "server_mode="${HERCULES_SERVER_MODE} >> ${VERSION_FILE}
 echo "build_date="${BUILD_TIMESTAMP} >> ${VERSION_FILE}
 echo "arch="${ARCH} >> ${VERSION_FILE}
 
-echo "Modify docker-compose.yml for distribution..."
-sed -i "s/__PACKET_VER_DEFAULT__/${HERCULES_PACKET_VERSION:-default}/g" ${BUILD_TARGET}/docker-compose.yml
-sed -i "s/__HERCULES_SERVER_MODE__/${HERCULES_SERVER_MODE:-classic}/g" ${BUILD_TARGET}/docker-compose.yml
-
 echo "Package up the distribution..."
 cd ${WORKSPACE}
 tar -zcf ${BUILD_ARCHIVE} ${DISTRIB_PATH}

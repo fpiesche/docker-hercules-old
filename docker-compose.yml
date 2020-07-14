@@ -13,5 +13,6 @@ services:
             # You can pass any other build options in with the HERCULES_BUILD_OPTS variable.
             HERCULES_BUILD_OPTS: ${HERCULES_BUILD_OPTS}
             USERID: ${USERID:-1000}
+            ARCH: ${ARCH}
 
         command: /build/build-hercules.sh
