@@ -16,5 +16,5 @@ EXPOSE 6121
 EXPOSE 5121
 
 USER hercules
-WORKDIR /
+WORKDIR /hercules
 ENTRYPOINT /autolycus/autolycus.py -p /hercules setup_all && /autolycus/autolycus.py -p /hercules start && tail -f /hercules/log/*
