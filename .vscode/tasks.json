@@ -1,0 +1,49 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Hercules",
+            "type": "shell",
+            "command": "docker-compose up",
+            "options": {
+                "env": {
+                    "ARCH": "${input:arch}"
+                }
+            }
+        },
+        {
+            "label": "Build Docker",
+            "type": "shell",
+            "command": "docker build . --tag hercules-devel --build-arg ARCH=${input:arch}"
+        },
+        {
+            "label": "Build All",
+            "type": "shell",
+            "command": "docker-compose up; cd ${workspace}/distrib; docker build . --tag hercules-devel --build-arg ARCH=${input:arch}",
+            "options": {
+                "env": {
+                    "ARCH": "${input:arch}"
+                }
+            }
+        },
+        {
+            "label": "Run Docker",
+            "type": "shell",
+            "command": "docker-compose up",
+            "options": {
+                "cwd": "${workspace}/distrib"
+            }
+        }
+    ],
+    "inputs": [
+        {
+          "id": "arch",
+          "type": "pickString",
+          "options": ["arm32v7", "arm64v8", "amd64"],
+          "default": "arm32v7"
+          // type specific configuration attributes
+        }
+      ]
+}
