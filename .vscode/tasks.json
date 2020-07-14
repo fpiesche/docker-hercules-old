@@ -36,6 +36,17 @@
                 "Build Hercules",
                 "Build Docker"
             ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Build All and Run",
+            "dependsOn": [
+                "Build Hercules",
+                "Build Docker",
+                "Run Docker"
+            ],
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -48,6 +59,7 @@
                 "Build Docker",
                 "Run Docker"
             ],
+            "dependsOrder": "sequence",
             "problemMatcher": [],
             "group": "build"
         },
