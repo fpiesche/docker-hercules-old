@@ -62,7 +62,7 @@
             "dependsOrder": "sequence",
             "problemMatcher": [],
             "group": "build"
-        },
+        }
     ],
     "inputs": [
         {
