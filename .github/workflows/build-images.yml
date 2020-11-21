@@ -10,14 +10,20 @@ jobs:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
         HERCULES_PACKET_VERSION: ["20180418", "default"]
         ARCH: ["amd64", "arm32v7", "arm64v8"]
-        # ARCH: ["amd64"]
 
     steps:
       - name: Check out repo
         uses: actions/checkout@v1
         with:
           submodules: recursive
-
+      
+      - name: Check out Hercules repo
+        uses: actions/checkout@v2
+        with:
+          repository: HerculesWS/Hercules
+          ref: refs/branches/stable
+          path: hercules-src
+  
       - name: Update package database
         run: sudo apt-get update
         if: ${{ matrix.ARCH }} != "amd64"
