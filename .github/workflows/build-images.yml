@@ -56,19 +56,19 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v1
 
-      - name: Download amd64 frontend build
+      - name: Download amd64 Hercules build
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-amd64
           path: distrib/linux/amd64
 
-      - name: Download arm32v7 frontend build
+      - name: Download arm32v7 Hercules build
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm32v7
           path: distrib/linux/arm/v7
   
-      - name: Download arm64 frontend build
+      - name: Download arm64 Hercules build
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
