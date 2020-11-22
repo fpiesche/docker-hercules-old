@@ -60,19 +60,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-amd64
-          path: distrib/linux/amd64
+          path: ${{ github.workspace }}/distrib/linux/amd64
 
       - name: Download arm32v7 Hercules build
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm32v7
-          path: distrib/linux/arm/v7
+          path: ${{ github.workspace }}/distrib/linux/arm/v7
   
       - name: Download arm64 Hercules build
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
-          path: distrib/linux/arm/64
+          path: ${{ github.workspace }}/distrib/linux/arm/64
   
       - name: Set up QEMU for Docker
         uses: docker/setup-qemu-action@v1
