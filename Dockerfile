@@ -1,10 +1,7 @@
-# To use this Dockerfile, run docker build with --build-arg ARCH=[amd64|arm32v7|arm64v8]
-ARG ARCH=${ARCH}
-
-FROM ${ARCH}/ubuntu:18.04
+FROM --platform=$TARGETPLATFORM ubuntu:18.04
 RUN apt-get update && apt-get install -y libmariadb-dev libmysqlclient20 libmariadb3 nano python3-pip
 RUN useradd --no-log-init -r hercules
-COPY --chown=hercules ./distrib/hercules /hercules
+COPY --chown=hercules ./distrib/$TARGETPLATFORM /hercules
 COPY --chown=hercules ./autolycus /autolycus
 RUN pip3 install -r /autolycus/requirements.txt
 
