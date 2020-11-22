@@ -93,3 +93,5 @@ jobs:
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           platforms: linux/amd64,linux/arm/v7,linux/arm/64
+          build-args: |
+            DISTRIB_PATH=${{ github.workspace }}/distrib
