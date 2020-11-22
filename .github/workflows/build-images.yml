@@ -72,7 +72,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
-          path: ${{ github.workspace }}/distrib/linux/arm/64
+          path: ${{ github.workspace }}/distrib/linux/arm64
   
       - name: Set up QEMU for Docker
         uses: docker/setup-qemu-action@v1
@@ -92,6 +92,6 @@ jobs:
           push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
-          platforms: linux/amd64,linux/arm/v7,linux/arm/64
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
           build-args: |
             DISTRIB_PATH=${{ github.workspace }}/distrib
