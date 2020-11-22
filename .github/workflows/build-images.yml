@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: HerculesWS/Hercules
-          ref: refs/branches/stable
+          ref: stable
           path: hercules-src
   
       - name: Update package database
