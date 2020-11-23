@@ -79,17 +79,17 @@ jobs:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-amd64
           path: ${{ github.workspace }}/distrib/linux/amd64
 
-      - name: Download arm32v7 Hercules build
-        uses: actions/download-artifact@v2
-        with:
-          name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm32v7
-          path: ${{ github.workspace }}/distrib/linux/arm/v7
+      # - name: Download arm32v7 Hercules build
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm32v7
+      #     path: ${{ github.workspace }}/distrib/linux/arm/v7
   
-      - name: Download arm64 Hercules build
-        uses: actions/download-artifact@v2
-        with:
-          name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
-          path: ${{ github.workspace }}/distrib/linux/arm64
+      # - name: Download arm64 Hercules build
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
+      #     path: ${{ github.workspace }}/distrib/linux/arm64
   
       - name: Build and push
         uses: docker/build-push-action@v2
