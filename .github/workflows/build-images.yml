@@ -56,6 +56,18 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v1
 
+      - name: Set up QEMU for Docker
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Download amd64 Hercules build
         uses: actions/download-artifact@v2
         with:
@@ -74,29 +86,14 @@ jobs:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
           path: ${{ github.workspace }}/distrib/linux/arm64
   
-      - run: ls ${{ github.workspace }}
-      - run: ls ${{ github.workspace }}/distrib
-      - run: ls ${{ github.workspace }}/distrib/linux
-  
-      - name: Set up QEMU for Docker
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.alpine
+          context: ${{ github.workspace }}
           push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           build-args: |
-            DISTRIB_PATH=${{ github.workspace }}/distrib
+            DISTRIB_PATH=distrib
