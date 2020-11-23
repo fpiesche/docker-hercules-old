@@ -31,7 +31,7 @@ jobs:
         uses: docker/setup-qemu-action@v1
 
       - name: Build Hercules
-        run: docker-compose up
+        run: docker-compose -f docker-compose-alpine.yml up
         working-directory: ${{ github.workspace }}
         env:
           ARCH: ${{ matrix.ARCH }}
@@ -89,6 +89,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          file: Dockerfile.alpine
           push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}

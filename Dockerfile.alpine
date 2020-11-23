@@ -1,0 +1,20 @@
+FROM --platform=$TARGETPLATFORM alpine
+ARG $TARGETPLATFORM
+ARG $DISTRIB_PATH=./distrib
+
+RUN apk add --no-cache mariadb-connector-c-dev mariadb-dev mariadb-connector-c-dev nano py3-pip
+RUN adduser --system hercules
+COPY --chown=hercules ${DISTRIB_PATH}/${TARGETPLATFORM} /hercules
+COPY --chown=hercules ./autolycus /autolycus
+RUN pip3 install -r /autolycus/requirements.txt
+
+# Login server
+EXPOSE 6900
+# Character server
+EXPOSE 6121
+# Map server
+EXPOSE 5121
+
+USER hercules
+WORKDIR /hercules
+ENTRYPOINT /autolycus/autolycus.py -p /hercules setup_all && /autolycus/autolycus.py -p /hercules start && tail -f /hercules/log/*
