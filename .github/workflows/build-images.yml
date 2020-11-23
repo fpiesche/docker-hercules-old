@@ -74,6 +74,10 @@ jobs:
           name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
           path: ${{ github.workspace }}/distrib/linux/arm64
   
+      - run: ls ${{ github.workspace }}
+      - run: ls ${{ github.workspace }}/distrib
+      - run: ls ${{ github.workspace }}/distrib/linux
+  
       - name: Set up QEMU for Docker
         uses: docker/setup-qemu-action@v1
 
