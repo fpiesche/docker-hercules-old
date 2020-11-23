@@ -91,6 +91,8 @@ jobs:
       #     name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
       #     path: ${{ github.workspace }}/distrib/linux/arm64
   
+      - run: ls ${{ github.workspace }}/distrib/linux/amd64
+  
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
