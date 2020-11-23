@@ -10,9 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", "default"]
-        ARCH: ["amd64", "arm32v7", "arm64v8"]
+        HERCULES_SERVER_MODE: ["classic"]
+        HERCULES_PACKET_VERSION: ["20180418"]
+        ARCH: ["amd64"]
+        # HERCULES_SERVER_MODE: ["classic", "renewal"]
+        # HERCULES_PACKET_VERSION: ["20180418", "default"]
+        # ARCH: ["amd64", "arm32v7", "arm64v8"]
 
     steps:
       - name: Check out repo
@@ -48,8 +51,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", "default"]
+        HERCULES_SERVER_MODE: ["classic"]
+        HERCULES_PACKET_VERSION: ["20180418"]
+        # HERCULES_SERVER_MODE: ["classic", "renewal"]
+        # HERCULES_PACKET_VERSION: ["20180418", "default"]
     needs: build-hercules
 
     steps:
@@ -91,9 +96,10 @@ jobs:
         with:
           file: Dockerfile.alpine
           context: ${{ github.workspace }}
-          push: true
+          # push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          # platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64
           build-args: |
             DISTRIB_PATH=distrib
