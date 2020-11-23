@@ -107,7 +107,7 @@ cp -r ${WORKSPACE}/distrib-tmpl/* ${DISTRIB_PATH}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${DISTRIB_PATH}
 
 echo "Add Autolycus to distribution."
-cp -r ${WORKSPACE}/autolycus ${DISTRIB_PATH}
+git clone https://github.com/fpiesche/autolycus ${DISTRIB_PATH}/autolycus
 
 echo "Adding build version file to distribution..."
 VERSION_FILE=${BUILD_TARGET}/version_info.ini

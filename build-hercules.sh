@@ -17,7 +17,7 @@ BUILD_TARGET=${DISTRIB_PATH}/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
 # Patch out Hercules' compile root check to speed up builds by literally a minute
-sed -i -e 's/"\$euid\" == \"0\"/\"\$euid\" == \"-1\"/' ${HERCULES_SRC}/configure.ac
+sed -i.bak -e "s/\$euid\" == \"0\"/$euid\" == \"-1\"/" ${HERCULES_SRC}/configure.ac
 
 echo "Building Hercules ${GIT_VERSION} in ${HERCULES_SERVER_MODE} mode."
 echo "Distribution will be assembled in ${DISTRIB_PATH}."
@@ -106,7 +106,7 @@ cp -r ${WORKSPACE}/distrib-tmpl/* ${DISTRIB_PATH}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${DISTRIB_PATH}
 
 echo "Add Autolycus to distribution."
-cp -r ${WORKSPACE}/autolycus ${DISTRIB_PATH}
+git clone https://github.com/fpiesche/autolycus ${DISTRIB_PATH}/autolycus
 
 echo "Adding build version file to distribution..."
 VERSION_FILE=${BUILD_TARGET}/version_info.ini
