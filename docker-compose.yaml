@@ -2,12 +2,15 @@ version: '3.2'
 
 services:
     game_servers:
-        # For testing local builds, simply replace this with the local tag you've given
-        # the image, e.g.:
-        # image: hercules
-        image: florianpiesche/hercules-${HERCULES_SERVER_MODE}-${HERCULES_PACKET_VERSION}
+        # The name format for the pre-built images is "hercules:[server mode]-[packet version]",
+        # e.g. to run a Renewal server on the latest packet version supported by Hercules, edit
+        # this to instead be florianpiesche/hercules:renewal-latest
+        image: florianpiesche/hercules:classic-20180418
         restart: on-failure
         ports:
+            # To make your game server accessible over the internet, you will need to forward
+            # these ports to the IP address of the computer running the server. You do NOT need
+            # to forward the port for the database server - doing so is insecure, and there is
             # login server
             - 6900:6900
             # character server
@@ -81,8 +84,13 @@ services:
             # user Hercules uses.
             INTERSERVER_USER: wisp
             INTERSERVER_PASSWORD: wisp
-        ports:
-            - 3306:3306
+        expose:
+            # Rather than "ports" as for the game servers, we're using "expose" to specify
+            # the port for the database service. This means the database will *only* be
+            # accessible to other services in this compose file but not from the host
+            # computer itself, which is more secure as only the game servers need
+            # access to the database.
+            - 3306
         volumes:
             # Again, using a volume for the database data means that even if you
             # destroy and rebuild the database service, your database will remain.
