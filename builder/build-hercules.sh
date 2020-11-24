@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 WORKSPACE="/builder"
 HERCULES_SRC=${WORKSPACE}/hercules-src
@@ -22,19 +22,19 @@ echo "Distribution will be assembled in ${DISTRIB_PATH}."
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
-if [ ${ARCH} == "arm64v8" || ${ARCH} == "aarch64" ]; then
+if [[ ${ARCH} == "arm64v8" || ${ARCH} == "aarch64" ]]; then
    echo "Running on arm64 - adding --disable-manager to build options to stop crashes."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
 
 # Set the packet version if it's been passed in.
-if [ ! -z "${HERCULES_PACKET_VERSION}" && ${HERCULES_PACKET_VERSION} != "latest" ]; then
+if [[ ! -z "${HERCULES_PACKET_VERSION}" && ${HERCULES_PACKET_VERSION} != "latest" ]]; then
    echo "Specifying packet version ${HERCULES_PACKET_VERSION}."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --enable-packetver=${HERCULES_PACKET_VERSION}"
 fi
 
 # Disable Renewal on Classic mode builds
-if [ ${HERCULES_SERVER_MODE} == "classic" ]; then
+if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-renewal"
 fi
 
@@ -45,12 +45,12 @@ echo "Now in "`pwd`
 echo `ls`
 make clean
 ./configure ${HERCULES_BUILD_OPTS}
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
    echo "CONFIGURE FAILED"
    exit 1
 fi
 make
-if [ $? -ne 0 ]; then
+if [[ $? -ne 0 ]]; then
    echo "BUILD FAILED"
    exit 1
 fi
@@ -82,13 +82,13 @@ cp ${HERCULES_SRC}/sql-files/mob_db2.sql ${BUILD_TARGET}/sql-files/6-mob_db2.sql
 cp ${HERCULES_SRC}/sql-files/mob_skill_db2.sql ${BUILD_TARGET}/sql-files/7-mob_skill_db2.sql 
 cp ${HERCULES_SRC}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 
-if [ ${HERCULES_SERVER_MODE} == "classic" ]; then
+if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    echo "Copy Classic SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
    cp ${HERCULES_SRC}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
    cp ${HERCULES_SRC}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
    cp ${HERCULES_SRC}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
-elif [ ${HERCULES_SERVER_MODE} == "renewal" ]; then
+elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
    echo "Copy Renewal SQL files into distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
    cp ${HERCULES_SRC}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
