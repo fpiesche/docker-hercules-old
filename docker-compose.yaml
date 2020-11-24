@@ -4,7 +4,9 @@ services:
     game_servers:
         # The name format for the pre-built images is "hercules:[server mode]-[packet version]",
         # e.g. to run a Renewal server on the latest packet version supported by Hercules, edit
-        # this to instead be florianpiesche/hercules:renewal-latest
+        # this to instead be florianpiesche/hercules:renewal-latest.
+        # If you want to run a local image you've built yourself, edit this to simply be the
+        # tag for that image, e.g. simply "hercules".
         image: florianpiesche/hercules:classic-20180418
         restart: on-failure
         ports:
