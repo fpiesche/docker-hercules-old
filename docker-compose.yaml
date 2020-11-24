@@ -26,7 +26,7 @@ services:
             # If you don't want to set up your own database server, simply
             # leave these as they are and your game servers will use the
             # database service defined below.
-            MYSQL_SERVER: db
+            MYSQL_SERVER: database
             MYSQL_PORT: 3306
 
             # The user name and password to use for accessing the database.
@@ -56,7 +56,7 @@ services:
     # be running, and also saves you having to set up a database server yourself.
     # Be sure to mirror any changes to the environment variables you make above
     # in the variables here!
-    db:
+    database:
         image: mariadb:10.4
         restart: on-failure
         depends_on:
