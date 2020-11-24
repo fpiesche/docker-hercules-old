@@ -10,10 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        HERCULES_SERVER_MODE: ["classic"]
-        HERCULES_PACKET_VERSION: ["20180418"]
-        # HERCULES_SERVER_MODE: ["classic", "renewal"]
-        # HERCULES_PACKET_VERSION: ["20180418", "default"]
+        HERCULES_SERVER_MODE: ["classic", "renewal"]
+        HERCULES_PACKET_VERSION: ["20180418", "default"]
 
     steps:
       - name: Check out repo
