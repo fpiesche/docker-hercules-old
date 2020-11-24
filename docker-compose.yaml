@@ -11,6 +11,14 @@ services:
             - 6121:6121
             # map server
             - 5121:5121
+        environment:
+            MYSQL_SERVER: db
+            MYSQL_PORT: 3306
+            MYSQL_USER: ragnarok
+            MYSQL_PASSWORD: ragnarok
+            MYSQL_DATABASE: ragnarok
+            INTERSERVER_USER: wisp
+            INTERSERVER_PASSWORD: wisp
         volumes:
             - configuration:/hercules/conf/import
             - sql_init:/hercules/sql-files/
