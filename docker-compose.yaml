@@ -60,6 +60,10 @@ services:
             - game_servers
         environment:
             # The password for the "root" (administrator) user on the database.
+            # If you're not planning on doing anything that requires administrator
+            # access to the database, you can comment this line out and the mariadb
+            # image will generate a random password for the root user on first startup,
+            # which is more secure than having a default one.
             MYSQL_ROOT_PASSWORD: hercroot
 
             # The user name and password to create for the Hercules servers
