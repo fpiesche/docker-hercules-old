@@ -12,50 +12,8 @@ jobs:
       matrix:
         HERCULES_SERVER_MODE: ["classic"]
         HERCULES_PACKET_VERSION: ["20180418"]
-        ARCH: ["amd64"]
         # HERCULES_SERVER_MODE: ["classic", "renewal"]
         # HERCULES_PACKET_VERSION: ["20180418", "default"]
-        # ARCH: ["amd64", "arm32v7", "arm64v8"]
-
-    steps:
-      - name: Check out repo
-        uses: actions/checkout@v1
-        with:
-          submodules: recursive
-
-      - name: Check out Hercules repo
-        uses: actions/checkout@v2
-        with:
-          repository: HerculesWS/Hercules
-          ref: stable
-          path: hercules-src
-
-      - name: Set up QEMU for Docker
-        uses: docker/setup-qemu-action@v1
-
-      - name: Build Hercules
-        run: docker-compose -f docker-compose-alpine.yml up
-        working-directory: ${{ github.workspace }}
-        env:
-          ARCH: ${{ matrix.ARCH }}
-          HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
-          HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
-
-      - name: Publish Hercules build
-        uses: actions/upload-artifact@v2
-        with:
-          name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-${{ matrix.ARCH }}
-          path: ./distrib
-
-  build-images:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        HERCULES_SERVER_MODE: ["classic"]
-        HERCULES_PACKET_VERSION: ["20180418"]
-        # HERCULES_SERVER_MODE: ["classic", "renewal"]
-        # HERCULES_PACKET_VERSION: ["20180418", "default"]
-    needs: build-hercules
 
     steps:
       - name: Check out repo
@@ -73,35 +31,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Download amd64 Hercules build
-        uses: actions/download-artifact@v2
-        with:
-          name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-amd64
-          path: ${{ github.workspace }}/distrib/linux/amd64
+      - name: Build Hercules
+        run: docker-compose -f docker-compose-alpine.yml up
+        working-directory: ${{ github.workspace }}
 
-      # - name: Download arm32v7 Hercules build
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm32v7
-      #     path: ${{ github.workspace }}/distrib/linux/arm/v7
-  
-      # - name: Download arm64 Hercules build
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}-arm64v8
-      #     path: ${{ github.workspace }}/distrib/linux/arm64
-  
-      - run: ls ${{ github.workspace }}/distrib/linux/amd64
-  
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile.alpine
-          context: ${{ github.workspace }}
-          # push: true
+          file: Dockerfile
+          push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
-          # platforms: linux/amd64,linux/arm/v7,linux/arm64
-          platforms: linux/amd64
-          build-args: |
-            DISTRIB_PATH=distrib
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          build-args:
+            - HERCULES_SERVER_MODE=${{ matrix.HERCULES_SERVER_MODE }}
+            - HERCULES_PACKET_VERSION=${{ matrix.HERCULES_PACKET_VERSION }}
