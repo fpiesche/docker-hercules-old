@@ -2,6 +2,9 @@ version: '3.2'
 
 services:
     game_servers:
+        # For testing local builds, simply replace this with the local tag you've given
+        # the image, e.g.:
+        # image: hercules
         image: florianpiesche/hercules-${HERCULES_SERVER_MODE}-${HERCULES_PACKET_VERSION}
         restart: on-failure
         ports:
