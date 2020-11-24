@@ -29,13 +29,25 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - uses: haya14busa/action-cond@v1
+        id: image_tags
+        with:
+          # Mark classic image with packet version 20180418 as the default on "hercules" repo
+          cond: ${{ matrix.HERCULES_SERVER_MODE == 'classic' && matrix.HERCULES_PACKET_VERSION == '20180418' }}
+          if_true: |
+            florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}
+            florianpiesche/hercules:latest
+          if_false: |
+            florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}
+
       - name: Build Hercules and publish images
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile
           push: true
-          tags: |
-            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
+          tags: ${{ steps.image_tags.outputs.value }}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           build-args: |
             HERCULES_SERVER_MODE=${{ matrix.HERCULES_SERVER_MODE }}
