@@ -8,8 +8,10 @@ DISTRIB_PATH=${WORKSPACE}/distrib
 BUILD_TARGET=${DISTRIB_PATH}/${BUILD_IDENTIFIER}
 BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
-echo "=== Getting Hercules source code..."
-git clone https://github.com/HerculesWS/Hercules ${HERCULES_SRC}
+if [[ ! -d ${HERCULES_SRC} ]]; then
+   echo "=== Getting Hercules source code..."
+   git clone https://github.com/HerculesWS/Hercules ${HERCULES_SRC}
+fi
 
 PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
@@ -75,10 +77,10 @@ cp ${HERCULES_SRC}/char-server ${BUILD_TARGET}/
 cp ${HERCULES_SRC}/login-server ${BUILD_TARGET}/
 cp ${HERCULES_SRC}/map-server ${BUILD_TARGET}/
 
-echo "=== Remove unnecessary configuration templates from distribution..."
+echo "=== Removing unnecessary configuration templates from distribution..."
 rm -rf ${BUILD_TARGET}/conf/import-tmpl
 
-echo "=== Copying common SQL files into distribution..."
+echo "=== Adding common SQL files to distribution..."
 mkdir -p ${BUILD_TARGET}/sql-files/upgrades
 cp ${HERCULES_SRC}/sql-files/upgrades/* ${BUILD_TARGET}/sql-files/upgrades/
 cp ${HERCULES_SRC}/sql-files/main.sql ${BUILD_TARGET}/sql-files/1-main.sql 
@@ -88,13 +90,13 @@ cp ${HERCULES_SRC}/sql-files/mob_skill_db2.sql ${BUILD_TARGET}/sql-files/7-mob_s
 cp ${HERCULES_SRC}/sql-files/logs.sql ${BUILD_TARGET}/sql-files/8-logs.sql 
 
 if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
-   echo "=== Copy Classic SQL files into distribution..."
+   echo "=== Adding Classic SQL files to distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
    cp ${HERCULES_SRC}/sql-files/item_db.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
    cp ${HERCULES_SRC}/sql-files/mob_db.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
    cp ${HERCULES_SRC}/sql-files/mob_skill_db.sql ${BUILD_TARGET}/sql-files/4-mob_skill_db.sql 
 elif [[ ${HERCULES_SERVER_MODE} == "renewal" ]]; then
-   echo "=== Copy Renewal SQL files into distribution..."
+   echo "=== Adding Renewal SQL files to distribution..."
    mkdir -p ${BUILD_TARGET}/sql-files
    cp ${HERCULES_SRC}/sql-files/item_db_re.sql ${BUILD_TARGET}/sql-files/2-item_db.sql 
    cp ${HERCULES_SRC}/sql-files/mob_db_re.sql ${BUILD_TARGET}/sql-files/3-mob_db.sql 
@@ -104,10 +106,12 @@ else
    exit 1
 fi
 
-echo "=== Add Autolycus to distribution."
-git clone https://github.com/fpiesche/autolycus ${DISTRIB_PATH}/autolycus
+if [[ ! -d ${DISTRIB_PATH}/autolycus ]]; then
+   echo "=== Adding Autolycus to distribution."
+   git clone https://github.com/fpiesche/autolycus ${DISTRIB_PATH}/autolycus
+fi
 
-echo "=== Add remaining files from distribution template..."
+echo "=== Adding remaining files from distribution template..."
 cp -r ${WORKSPACE}/distrib-tmpl/* ${DISTRIB_PATH}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${DISTRIB_PATH}
 
@@ -119,5 +123,8 @@ echo "packet_version="${HERCULES_PACKET_VERSION:-${PACKETVER_FROM_SOURCE}} >> ${
 echo "server_mode="${HERCULES_SERVER_MODE} >> ${VERSION_FILE}
 echo "build_date="${BUILD_TIMESTAMP} >> ${VERSION_FILE}
 echo "arch="${PLATFORM} >> ${VERSION_FILE}
+
+echo "=== Compressing distribution..."
+tar cfz /hercules_${BUILD_TIMESTAMP}.tar.gz ${DISTRIB_PATH}/
 
 echo "=== Done!"
