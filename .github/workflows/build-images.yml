@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", "default"]
+        HERCULES_PACKET_VERSION: ["20180418", "latest"]
 
     steps:
       - name: Check out repo
@@ -39,7 +39,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           build-args:
             - HERCULES_SERVER_MODE=${{ matrix.HERCULES_SERVER_MODE }}
