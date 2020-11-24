@@ -15,32 +15,73 @@ services:
             # map server
             - 5121:5121
         environment:
+            # These variables will work for a default setup. Feel free to
+            # edit their contents to your liking. Make sure to duplicate any
+            # changes you make in the database service below.
+
+            # This is just the host name and the port for the database server.
+            # If you don't want to set up your own database server, simply
+            # leave these as they are and your game servers will use the
+            # database service defined below.
             MYSQL_SERVER: db
             MYSQL_PORT: 3306
+
+            # The user name and password to use for accessing the database.
             MYSQL_USER: ragnarok
             MYSQL_PASSWORD: ragnarok
+
+            # The database to use for your data on the database server.
             MYSQL_DATABASE: ragnarok
+
+            # The user name and password for the inter-server communication
+            # account.
             INTERSERVER_USER: wisp
             INTERSERVER_PASSWORD: wisp
+
         volumes:
+            # Using volumes to store the configuration means
+            # your Docker installation will keep the configuration
+            # outside of the container - so even if you update
+            # or destroy and rebuild the container, your configuration
+            # will persist.
             - configuration:/hercules/conf/import
             - sql_init:/hercules/sql-files/
 
+    # This service will cause Docker to also bring up a database service to
+    # use with your Hercules servers. Having a separate container for this is useful
+    # as the database will be separate from any other databases you may
+    # be running, and also saves you having to set up a database server yourself.
+    # Be sure to mirror any changes to the environment variables you make above
+    # in the variables here!
     db:
         image: mariadb:10.4
         restart: on-failure
         depends_on:
             - game_servers
         environment:
+            # The password for the "root" (administrator) user on the database.
             MYSQL_ROOT_PASSWORD: hercroot
+
+            # The user name and password to create for the Hercules servers
+            # to connect to the database.
             MYSQL_USER: ragnarok
             MYSQL_PASSWORD: ragnarok
+
+            # The database to create for the Hercules servers. This will be
+            # automatically set up using the SQL files required for the initial
+            # Ragnarok database for your selected server mode, as per Hercules
+            # documentation.
             MYSQL_DATABASE: ragnarok
+
+            # The user name and password for the inter-server communication
+            # user Hercules uses.
             INTERSERVER_USER: wisp
             INTERSERVER_PASSWORD: wisp
         ports:
             - 3306:3306
         volumes:
+            # Again, using a volume for the database data means that even if you
+            # destroy and rebuild the database service, your database will remain.
             - mysql_data:/var/lib/mysql
             - sql_init:/docker-entrypoint-initdb.d
 
