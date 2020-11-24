@@ -6,84 +6,49 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-hercules:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", "default"]
-        ARCH: ["amd64", "arm32v7", "arm64v8"]
+        HERCULES_PACKET_VERSION: ["20180418", "latest"]
 
     steps:
       - name: Check out repo
         uses: actions/checkout@v1
+
+      - name: Set up QEMU for Docker
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
         with:
-          submodules: recursive
-      
-      - name: Check out Hercules repo
-        uses: actions/checkout@v2
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: haya14busa/action-cond@v1
+        id: image_tags
         with:
-          repository: HerculesWS/Hercules
-          ref: stable
-          path: hercules-src
-  
-      - name: Update package database
-        run: sudo apt-get update
-        if: ${{ matrix.ARCH }} != "amd64"
-  
-      - name: Install QEmu for cross-architecture build support
-        run: sudo apt-get install qemu binfmt-support qemu-user-static
-        if: ${{ matrix.ARCH }} != "amd64"
+          # Mark classic image with packet version 20180418 as the default on "hercules" repo
+          cond: ${{ matrix.HERCULES_SERVER_MODE == 'classic' && matrix.HERCULES_PACKET_VERSION == '20180418' }}
+          if_true: |
+            florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}
+            florianpiesche/hercules:latest
+          if_false: |
+            florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}
 
-      - name: Set up Docker to use QEmu
-        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-        if: ${{ matrix.ARCH }} != "amd64"
-
-      - name: Build Hercules
-        run: docker-compose up
-        working-directory: ${{ github.workspace }}
-        env:
-          ARCH: ${{ matrix.ARCH }}
-          HERCULES_SERVER_MODE: ${{ matrix.HERCULES_SERVER_MODE }}
-          HERCULES_PACKET_VERSION: ${{ matrix.HERCULES_PACKET_VERSION }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v1
+      - name: Build Hercules and publish images
+        uses: docker/build-push-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}
-          tag_with_ref: true
-          tags: ${{ matrix.ARCH }}
-          build_args: ARCH=${{ matrix.ARCH }}
-          path: ${{ github.workspace }}
-
-  build-manifests:
-    runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        HERCULES_SERVER_MODE: ["classic", "renewal"]
-        HERCULES_PACKET_VERSION: ["20180418", "default"]
-
-    steps:
-      - name: Log in to Docker Hub
-        uses: azure/docker-login@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Add images to manifest
-        run: |
-          docker manifest create \
-          florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest \
-          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:amd64 \
-          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm32v7 \
-          --amend florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:arm64v8
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
-  
-      - name: Push manifest
-        run: docker manifest push florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:latest
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.image_tags.outputs.value }}
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          build-args: |
+            HERCULES_SERVER_MODE=${{ matrix.HERCULES_SERVER_MODE }}
+            HERCULES_PACKET_VERSION=${{ matrix.HERCULES_PACKET_VERSION }}
