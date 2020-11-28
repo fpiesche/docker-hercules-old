@@ -59,7 +59,7 @@ jobs:
           push: true
           tags: |
             florianpiesche/hercules-${{ matrix.HERCULES_SERVER_MODE }}-${{ matrix.HERCULES_PACKET_VERSION }}:armv6
-            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}:armv6
+            florianpiesche/hercules:${{ matrix.HERCULES_SERVER_MODE }}-packetver-${{ matrix.HERCULES_PACKET_VERSION }}-armv6
             florianpiesche/hercules:armv6
           platforms: linux/arm/v6
           build-args: |
