@@ -75,11 +75,11 @@ RUN useradd --no-log-init -r hercules
 # to optimise build cache usage. Docker will cache the image with the
 # Python dependencies installed and reuse this for subsequent builds.
 ENV PLATFORM=${TARGETPLATFORM}
-COPY --from=build_hercules --chown=hercules /builder/distrib/autolycus/requirements.txt /autolycus/
+COPY --from=build_hercules --chown=hercules /home/builduser/distrib/autolycus/requirements.txt /autolycus/
 RUN pip3 install -r /autolycus/requirements.txt 
 
 # Copy the actual distribution from builder image
-COPY --from=build_hercules --chown=hercules /builder/distrib/ /
+COPY --from=build_hercules --chown=hercules /home/builduser/distrib/ /
 
 # Login server, Character server, Map server
 EXPOSE 6900 6121 5121
