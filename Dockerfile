@@ -3,7 +3,7 @@
 # We'll build Hercules on Debian Buster's "slim" image.
 # This minimises dependencies and download times for the builder.
 ###
-FROM --platform=${TARGETPLATFORM:-linux/arm/v7} debian:buster-slim AS build_hercules
+FROM --platform=${TARGETPLATFORM:-linux/arm/v6} debian:buster-slim AS build_hercules
 
 # Set this to "classic" or "renewal" to build the relevant server version (default: classic).
 ARG HERCULES_SERVER_MODE=classic
@@ -30,15 +30,20 @@ RUN apt-get update && apt-get install -y \
   make \
   zlib1g-dev
 
+# Create a build user
+RUN adduser --home /home/builduser --shell /bin/bash --gecos "builduser" --disabled-password builduser
+
 # Copy the Hercules build script and distribution template
-COPY builder /builder
+COPY --chown=builduser builder /home/builduser
 
 # Run the build
-ENV PLATFORM=${TARGETPLATFORM}
+ENV WORKSPACE=/home/builduser
+ENV DISABLE_MANAGER_ARM64=true
+ENV PLATFORM=${TARGETPLATFORM:-linux/arm/v6}
 ENV HERCULES_PACKET_VERSION=${HERCULES_PACKET_VERSION}
 ENV HERCULES_SERVER_MODE=${HERCULES_SERVER_MODE}
 ENV HERCULES_BUILD_OPTS=${HERCULES_BUILD_OPTS}
-RUN /builder/build-hercules.sh
+RUN /home/builduser/build-hercules.sh
 
 ###
 # STAGE 2: BUILD IMAGE

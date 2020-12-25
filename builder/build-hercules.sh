@@ -1,6 +1,10 @@
 #!/bin/bash
 
-WORKSPACE="/builder"
+# Set default workspace if it hasn't been passed in
+if [[ -z ${WORKSPACE} ]]; then
+   WORKSPACE="/builder"
+fi
+
 HERCULES_SRC=${WORKSPACE}/hercules-src
 BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
 BUILD_IDENTIFIER=hercules
@@ -16,12 +20,9 @@ fi
 PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
 
-# Patch out Hercules' compile root check to speed up builds by literally a minute
-sed -i.bak -e "s/\$euid\" == \"0\"/\$euid\" == \"-1\"/" ${HERCULES_SRC}/configure.ac
-
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
-if [[ ${PLATFORM} == "linux/arm64*" ]]; then
+if [[ ${PLATFORM} == "linux/arm64*" ]] && [[ ! -z ${DISABLE_MANAGER_ARM64} ]]; then
    echo "=== Building for arm64 - disabling memory manager to stop crashes."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
@@ -125,6 +126,6 @@ echo "build_date="${BUILD_TIMESTAMP} >> ${VERSION_FILE}
 echo "arch="${PLATFORM} >> ${VERSION_FILE}
 
 echo "=== Compressing distribution..."
-tar cfz /hercules_${BUILD_TIMESTAMP}.tar.gz ${DISTRIB_PATH}/
+tar cfz ${WORKSPACE}/hercules_${BUILD_TIMESTAMP}.tar.gz ${DISTRIB_PATH}/
 
 echo "=== Done!"
