@@ -20,6 +20,11 @@ fi
 PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
 GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
 
+if [[ ${PLATFORM~ == "*arm/v6"} ]]; then
+   echo "=== Building on ARMv6 - patching ARM version detection to warn to make builds work"
+   sed -i.bak -e "s/#error Target platform currently not supported/#warning Target platform currently not supported/" $HERCULES_SRC/src/common/atomic.h
+fi
+
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
 if [[ ${PLATFORM} == "linux/arm64*" ]] && [[ ! -z ${DISABLE_MANAGER_ARM64} ]]; then

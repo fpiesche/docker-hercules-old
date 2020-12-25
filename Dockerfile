@@ -37,6 +37,7 @@ RUN adduser --home /home/builduser --shell /bin/bash --gecos "builduser" --disab
 COPY --chown=builduser builder /home/builduser
 
 # Run the build
+USER builduser
 ENV WORKSPACE=/home/builduser
 ENV DISABLE_MANAGER_ARM64=true
 ENV PLATFORM=${TARGETPLATFORM:-linux/arm/v6}
