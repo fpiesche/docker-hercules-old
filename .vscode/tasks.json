@@ -1,0 +1,76 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Hercules",
+            "type": "shell",
+            "command": "docker-compose up",
+            "options": {
+                "env": {
+                    "ARCH": "${input:arch}"
+                }
+            },
+            "group": "build"
+        },
+        {
+            "label": "Build Docker",
+            "type": "shell",
+            "command": "docker build . --tag hercules --build-arg ARCH=${input:arch}",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Run Docker",
+            "type": "shell",
+            "command": "docker-compose up",
+            "options": {
+                "cwd": "distrib"
+            },
+            "group": "test"
+        },
+        {
+            "label": "Build All",
+            "dependsOn": [
+                "Build Hercules",
+                "Build Docker"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Build All and Run",
+            "dependsOn": [
+                "Build Hercules",
+                "Build Docker",
+                "Run Docker"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Rebuild and run Docker only",
+            "dependsOn": [
+                "Build Docker",
+                "Run Docker"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ],
+    "inputs": [
+        {
+          "id": "arch",
+          "type": "pickString",
+          "options": ["arm32v7", "arm64v8", "amd64"],
+          "default": "arm32v7",
+          "description": "Select the architecture to compile."
+        }
+      ]
+}
