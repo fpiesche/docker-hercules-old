@@ -1,10 +1,12 @@
----
 kind: pipeline
 type: docker
 name: mode-classic_packetver-latest
 
-steps:
+trigger:
+  branch:
+  - default
 
+steps:
 - name: docker-build
   image: thegeeklab/drone-docker-buildx
   environment:
@@ -24,8 +26,11 @@ kind: pipeline
 type: docker
 name: mode-classic_packetver-20180418
 
-steps:
+trigger:
+  branch:
+  - default
 
+steps:
 - name: docker-build
   image: thegeeklab/drone-docker-buildx
   environment:
@@ -46,8 +51,11 @@ kind: pipeline
 type: docker
 name: mode-renewal_packetver-latest
 
-steps:
+trigger:
+  branch:
+  - default
 
+steps:
 - name: docker-build
   image: thegeeklab/drone-docker-buildx
   environment:
@@ -67,8 +75,11 @@ kind: pipeline
 type: docker
 name: mode-renewal_packetver-20180418
 
-steps:
+trigger:
+  branch:
+  - default
 
+steps:
 - name: docker-build
   image: thegeeklab/drone-docker-buildx
   environment:
