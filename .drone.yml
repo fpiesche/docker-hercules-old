@@ -1,0 +1,84 @@
+---
+kind: pipeline
+type: docker
+name: mode-classic_packetver-latest
+
+steps:
+
+- name: docker-build
+  image: thegeeklab/drone-docker-buildx
+  environment:
+    HERCULES_SERVER_MODE: "classic"
+    HERCULES_PACKET_VERSION: "latest"
+  settings:
+    repo: florianpiesche/hercules-docker
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+      - classic-packetver-latest
+
+---
+kind: pipeline
+type: docker
+name: mode-classic_packetver-20180418
+
+steps:
+
+- name: docker-build
+  image: thegeeklab/drone-docker-buildx
+  environment:
+    HERCULES_SERVER_MODE: "classic"
+    HERCULES_PACKET_VERSION: "20180418"
+  settings:
+    repo: florianpiesche/hercules-docker
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+      - latest
+      - classic-packetver-20180418
+
+---
+kind: pipeline
+type: docker
+name: mode-renewal_packetver-latest
+
+steps:
+
+- name: docker-build
+  image: thegeeklab/drone-docker-buildx
+  environment:
+    HERCULES_SERVER_MODE: "renewal"
+    HERCULES_PACKET_VERSION: "latest"
+  settings:
+    repo: florianpiesche/hercules-docker
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+      - renewal-packetver-latest
+
+---
+kind: pipeline
+type: docker
+name: mode-renewal_packetver-20180418
+
+steps:
+
+- name: docker-build
+  image: thegeeklab/drone-docker-buildx
+  environment:
+    HERCULES_SERVER_MODE: "renewal"
+    HERCULES_PACKET_VERSION: "20180418"
+  settings:
+    repo: florianpiesche/hercules-docker
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    tags:
+      - renewal-packetver-20180418
