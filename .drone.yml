@@ -1,95 +1,25 @@
-kind: pipeline
-type: kubernetes
-name: mode-classic_packetver-latest
+branches: default
 
-trigger:
-  branch:
-  - default
+matrix:
+  HERCULES_SERVER_MODE:
+    - "classic"
+    - "renewal"
+  HERCULES_PACKET_VERSION:
+    - "latest"
+    - "20180418"
 
-steps:
-- name: docker-build
-  image: thegeeklab/drone-docker-buildx
-  environment:
-    HERCULES_SERVER_MODE: "classic"
-    HERCULES_PACKET_VERSION: "latest"
-  settings:
-    repo: florianpiesche/hercules-docker
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    tags:
-      - classic-packetver-latest
-
----
-kind: pipeline
-type: kubernetes
-name: mode-classic_packetver-20180418
-
-trigger:
-  branch:
-  - default
-
-steps:
-- name: docker-build
-  image: thegeeklab/drone-docker-buildx
-  environment:
-    HERCULES_SERVER_MODE: "classic"
-    HERCULES_PACKET_VERSION: "20180418"
-  settings:
-    repo: florianpiesche/hercules-docker
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    tags:
-      - latest
-      - classic-packetver-20180418
-
----
-kind: pipeline
-type: kubernetes
-name: mode-renewal_packetver-latest
-
-trigger:
-  branch:
-  - default
-
-steps:
-- name: docker-build
-  image: thegeeklab/drone-docker-buildx
-  environment:
-    HERCULES_SERVER_MODE: "renewal"
-    HERCULES_PACKET_VERSION: "latest"
-  settings:
-    repo: florianpiesche/hercules-docker
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    tags:
-      - renewal-packetver-latest
-
----
-kind: pipeline
-type: kubernetes
-name: mode-renewal_packetver-20180418
-
-trigger:
-  branch:
-  - default
-
-steps:
-- name: docker-build
-  image: thegeeklab/drone-docker-buildx
-  environment:
-    HERCULES_SERVER_MODE: "renewal"
-    HERCULES_PACKET_VERSION: "20180418"
-  settings:
-    repo: florianpiesche/hercules-docker
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    tags:
-      - renewal-packetver-20180418
+pipeline:
+  docker-build:
+    image: thegeeklab/drone-docker-buildx
+    pull: true
+    # environment:
+    commands:
+      - docker login
+      - > 
+        docker buildx build --push
+        --platform linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64
+        --tag florianpiesche/hercules:${HERCULES_SERVER_MODE}-packetver-${HERCULES_PACKET_VERSION}
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
