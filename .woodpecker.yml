@@ -16,7 +16,7 @@ pipeline:
       - dockerhub_token
     pull: true
     commands:
-      - echo ${DOCKERHUB_TOKEN} | docker login --username ${DOCKERHUB_USERNAME} --password-stdin
+      - echo $${DOCKERHUB_TOKEN} | docker login --username $${DOCKERHUB_USERNAME} --password-stdin
       - > 
         docker buildx build --push
         --platform linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64
