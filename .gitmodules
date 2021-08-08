@@ -1,0 +1,3 @@
+[submodule "hercules"]
+	path = hercules
+	url = https://github.com/HerculesWS/Hercules
