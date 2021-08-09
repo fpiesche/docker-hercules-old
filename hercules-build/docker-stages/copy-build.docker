@@ -1,0 +1,6 @@
+###
+# Copy build files to host
+###
+
+FROM scratch AS exporter
+COPY --from=builder /home/builder/distrib/hercules/ /

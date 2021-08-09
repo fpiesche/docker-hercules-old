@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Set default workspace if it hasn't been passed in
 if [[ -z ${WORKSPACE} ]]; then
@@ -6,28 +6,39 @@ if [[ -z ${WORKSPACE} ]]; then
 fi
 
 HERCULES_SRC=${WORKSPACE}/hercules-src
-BUILD_TIMESTAMP=`date +"%Y-%m-%d_%H-%M-%S"`
+BUILD_TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 BUILD_IDENTIFIER=hercules
+ARCH=$(uname -m)
 DISTRIB_PATH=${WORKSPACE}/distrib
 BUILD_TARGET=${DISTRIB_PATH}/${BUILD_IDENTIFIER}
-BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${BUILD_TIMESTAMP}.tar.gz
 
-if [[ ! -d ${HERCULES_SRC} ]]; then
-   echo "=== Getting Hercules source code..."
-   git clone https://github.com/HerculesWS/Hercules ${HERCULES_SRC}
+echo "=== Getting Hercules source code..."
+git clone https://github.com/HerculesWS/Hercules ${HERCULES_SRC}
+
+echo "=== Extracting packet version..."
+PACKETVER_FROM_SOURCE=$(cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p')
+
+if [[ ! -z ${GIT_VERSION} ]]; then
+   echo "=== Checking out revision ${GIT_VERSION}..."
+   cd ${HERCULES_SRC}
+   git checkout ${GIT_VERSION}
+   cd ${WORKSPACE}
+else
+   echo "=== Determining current git version..."
+   cd ${HERCULES_SRC}
+   GIT_VERSION=$(git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD)
+   cd ${WORKSPACE}
+   echo "=== Building ${GIT_VERSION}."
 fi
 
-PACKETVER_FROM_SOURCE=`cat ${HERCULES_SRC}/src/common/mmo.h | sed -n -e 's/^.*#define PACKETVER \(.*\)/\1/p'`
-GIT_VERSION=`cd ${HERCULES_SRC}; git describe --tags --exact-match 2> /dev/null || git symbolic-ref -q --short HEAD || git rev-parse --short HEAD; cd ${WORKSPACE}`
-
-if [[ ${PLATFORM~ == "*arm/v6"} ]]; then
-   echo "=== Building on ARMv6 - patching ARM version detection to warn to make builds work"
+if [[ ${ARCH} == "armhf"} ]]; then
+   echo "=== Building on ARMv6 - patching ARM version detection to make builds work"
    sed -i.bak -e "s/#error Target platform currently not supported/#warning Target platform currently not supported/" $HERCULES_SRC/src/common/atomic.h
 fi
 
 # Disable Hercules' memory manager on arm64 to stop servers crashing
 # https://herc.ws/board/topic/18230-support-for-armv8-is-it-possible/#comment-96631
-if [[ ${PLATFORM} == "linux/arm64*" ]] && [[ ! -z ${DISABLE_MANAGER_ARM64} ]]; then
+if [[ ${ARCH} == "aarch64" ]] && [[ ! -z ${DISABLE_MANAGER_ARM64} ]]; then
    echo "=== Building for arm64 - disabling memory manager to stop crashes."
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-manager"
 fi
@@ -42,11 +53,14 @@ if [[ ${HERCULES_SERVER_MODE} == "classic" ]]; then
    HERCULES_BUILD_OPTS=$HERCULES_BUILD_OPTS" --disable-renewal"
 fi
 
+# Determine output file name
+BUILD_ARCHIVE=${WORKSPACE}/${BUILD_IDENTIFIER}_${GIT_VERSION}_${ARCH}.tar.gz
+
 echo "==========================================================="
-echo "=== Building Hercules ${GIT_VERSION}"
+echo "=== Building Hercules version: ${GIT_VERSION}"
 echo "=== Server mode: ${HERCULES_SERVER_MODE}"
 echo "=== Packet version: ${HERCULES_PACKET_VERSION}"
-echo "=== Target platform: ${PLATFORM}"
+echo "=== Target platform: ${ARCH}"
 echo "==========================================================="
 
 echo "=== Build options: ${HERCULES_BUILD_OPTS}..."
@@ -66,6 +80,7 @@ fi
 echo "==========================================================="
 echo "=== Assembling distribution"
 echo "=== Distribution target directory: ${DISTRIB_PATH}"
+echo "=== Distribution archive: ${BUILD_ARCHIVE}"
 echo "==========================================================="
 
 # Copy server data to distribution directory
@@ -112,11 +127,6 @@ else
    exit 1
 fi
 
-if [[ ! -d ${DISTRIB_PATH}/autolycus ]]; then
-   echo "=== Adding Autolycus to distribution."
-   git clone https://github.com/fpiesche/autolycus ${DISTRIB_PATH}/autolycus
-fi
-
 echo "=== Adding remaining files from distribution template..."
 cp -r ${WORKSPACE}/distrib-tmpl/* ${DISTRIB_PATH}/
 cp ${WORKSPACE}/distrib-tmpl/.env ${DISTRIB_PATH}
@@ -128,9 +138,9 @@ echo "git_version="${GIT_VERSION} >> ${VERSION_FILE}
 echo "packet_version="${HERCULES_PACKET_VERSION:-${PACKETVER_FROM_SOURCE}} >> ${VERSION_FILE}
 echo "server_mode="${HERCULES_SERVER_MODE} >> ${VERSION_FILE}
 echo "build_date="${BUILD_TIMESTAMP} >> ${VERSION_FILE}
-echo "arch="${PLATFORM} >> ${VERSION_FILE}
+echo "arch="${ARCH} >> ${VERSION_FILE}
 
 echo "=== Compressing distribution..."
-tar cfz ${WORKSPACE}/hercules_${BUILD_TIMESTAMP}.tar.gz ${DISTRIB_PATH}/
+tar cfz ${BUILD_ARCHIVE} ${DISTRIB_PATH}/
 
 echo "=== Done!"

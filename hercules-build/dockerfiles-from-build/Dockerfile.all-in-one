@@ -1,0 +1,19 @@
+###
+# BUILD ALL-IN-ONE IMAGE FROM EXISTING BUILD
+###
+FROM alpine:3.14 AS hercules-aio
+
+RUN adduser --home /home/hercules --shell /bin/ash --gecos "hercules" --disabled-password hercules
+RUN apk add --no-cache mariadb-connector-c-dev
+RUN mkdir -p /var/log/hercules
+
+USER hercules
+WORKDIR /home/hercules
+
+COPY build/* /home/hercules
+
+# Login server, Character server, Map server
+EXPOSE 6900 6121 5121
+
+VOLUME /home/hercules/config
+CMD [ "/home/hercules/athena-start", "start" ]
